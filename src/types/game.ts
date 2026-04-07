@@ -151,7 +151,10 @@ export interface EventTrigger {
   minTurn?: number
   locationId?: string
   minFame?: number
+  /** Event triggers only when player stat >= minStat value */
   minStat?: Partial<PlayerStats>
+  /** Event triggers only when player stat <= maxStat value (for low-resource events) */
+  maxStat?: Partial<PlayerStats>
   relations?: Record<string, number>
   flags?: string[]
   completedQuests?: string[]

@@ -32,7 +32,7 @@ export function DuelModal() {
         <div className={styles.hpBars}>
           {/* Player side */}
           <div className={styles.hpSide}>
-            <span className={styles.hpLabel}>你</span>
+            <span className={styles.hpLabel}>君</span>
             <div className={styles.hpBar}>
               <div
                 className={`${styles.hpFill} ${styles.hpFillPlayer}`}

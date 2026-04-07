@@ -97,7 +97,12 @@ function pickTriggeredEvent(state: GameState): GameEvent | null {
     }
     if (t.minStat) {
       for (const [stat, minVal] of Object.entries(t.minStat)) {
-        if ((player.stats[stat as keyof PlayerStats] ?? 0) > (minVal ?? 0)) return false
+        if ((player.stats[stat as keyof PlayerStats] ?? 0) < (minVal ?? 0)) return false
+      }
+    }
+    if (t.maxStat) {
+      for (const [stat, maxVal] of Object.entries(t.maxStat)) {
+        if ((player.stats[stat as keyof PlayerStats] ?? 0) > (maxVal ?? 0)) return false
       }
     }
     const prob = t.probability ?? 1

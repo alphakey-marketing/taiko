@@ -36,7 +36,7 @@ export const EVENTS: GameEvent[] = [
     type: 'personal',
     title: '疲弊した朝',
     body: '体がひどく疲れている。それでも今日もやることは山積みだ。どうする？',
-    trigger: { minStat: { stamina: 0 }, probability: 0.4 },
+    trigger: { maxStat: { stamina: 30 }, probability: 0.4 },
     choices: [
       {
         label: '無理して動く',
@@ -91,7 +91,7 @@ export const EVENTS: GameEvent[] = [
     type: 'personal',
     title: '貧困の選択',
     body: '財布がほぼ空だ。このままでは明日の食事にも困る。どうやって乗り切る？',
-    trigger: { minStat: { gold: 0 }, probability: 0.5 },
+    trigger: { maxStat: { gold: 20 }, probability: 0.5 },
     choices: [
       {
         label: '商人に借りる',
