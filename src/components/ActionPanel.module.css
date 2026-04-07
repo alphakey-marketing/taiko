@@ -1,0 +1,190 @@
+.panel {
+  background: #1a0f05;
+  border: 1px solid #5a3a1a;
+  border-radius: 4px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  border-bottom: 1px solid #3a2a10;
+  padding-bottom: 0.4rem;
+}
+
+.title {
+  font-size: 0.95rem;
+  color: #e8c87a;
+  margin: 0;
+  font-weight: 600;
+}
+
+.subtitle {
+  font-size: 0.75rem;
+  color: #9a8060;
+  font-weight: 400;
+}
+
+.actionsLeft {
+  font-size: 0.75rem;
+  color: #9a8060;
+}
+
+.actionList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.actionBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0.75rem;
+  background: #2a1a08;
+  border: 1px solid #5a3a1a;
+  border-radius: 3px;
+  color: #d4b896;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+  font-family: inherit;
+}
+
+.actionBtn:hover:not(:disabled) {
+  background: #3d2510;
+  border-color: #c23b3b;
+  color: #e8c87a;
+}
+
+.actionBtn.disabled,
+.actionBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.actionLabel {
+  font-weight: 500;
+}
+
+.actionCost {
+  font-size: 0.7rem;
+  color: #8a7060;
+}
+
+/* Quest sections */
+.questSection {
+  border-top: 1px solid #3a2a10;
+  padding-top: 0.6rem;
+}
+
+.questTitle {
+  font-size: 0.72rem;
+  color: #9a8060;
+  letter-spacing: 0.1em;
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+}
+
+.questCard {
+  background: #221208;
+  border: 1px solid #4a2a10;
+  border-radius: 3px;
+  padding: 0.5rem 0.6rem;
+  margin-bottom: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.questName {
+  font-size: 0.85rem;
+  color: #e8c87a;
+  font-weight: 600;
+}
+
+.questDesc {
+  font-size: 0.72rem;
+  color: #9a8060;
+  line-height: 1.4;
+}
+
+.questMeta {
+  font-size: 0.7rem;
+  color: #7a6050;
+}
+
+.questLocation {
+  font-size: 0.7rem;
+  color: #7a6050;
+  font-style: italic;
+}
+
+.acceptBtn,
+.completeBtn {
+  align-self: flex-start;
+  padding: 3px 10px;
+  border-radius: 2px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.acceptBtn {
+  background: #2e5d1a;
+  border: 1px solid #4a8a2a;
+  color: #a0d888;
+}
+
+.acceptBtn:hover:not(:disabled) {
+  background: #3d7a22;
+  color: #c0f0a0;
+}
+
+.completeBtn {
+  background: #1a3d6d;
+  border: 1px solid #2a5a9a;
+  color: #88b8e8;
+}
+
+.completeBtn:hover:not(:disabled) {
+  background: #224d8a;
+  color: #a8d0f8;
+}
+
+.acceptBtn:disabled,
+.completeBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.endTurnBtn {
+  margin-top: auto;
+  padding: 0.65rem 1rem;
+  background: linear-gradient(135deg, #6d1a1a 0%, #8b2020 100%);
+  border: 1px solid #c23b3b;
+  border-radius: 3px;
+  color: #f5c0c0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.05em;
+  font-family: inherit;
+}
+
+.endTurnBtn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #8b2020 0%, #a02828 100%);
+  color: #fff0f0;
+}
+
+.endTurnBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
