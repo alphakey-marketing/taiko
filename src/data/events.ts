@@ -481,7 +481,7 @@ export const EVENTS: GameEvent[] = [
     type: 'career',
     title: '初次謁見',
     body: '朝霧直家と初めて正式に顔を合わせた。「そなたが噂の陰陽師か」と彼は静かに言った。',
-    trigger: { locationId: 'loc_castle', turn: 2 },
+    trigger: { locationId: 'loc_castle', minTurn: 2, minFame: 3, probability: 0.9 },
     choices: [
       {
         label: '「一命をかけてお仕えします」と誓う',

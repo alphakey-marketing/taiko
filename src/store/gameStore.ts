@@ -161,6 +161,7 @@ interface GameStore extends GameState {
   // Duels
   startDuel: (duel: DuelState) => void
   performDuelAction: (action: DuelActionType) => void
+  dismissDuel: () => void
   // Turn
   endTurn: () => void
   // Misc
@@ -386,6 +387,11 @@ export const useGameStore = create<GameStore>()(
             if ((player.relations[npcId] ?? 0) < minVal) return
           }
         }
+        if (requirements.stats) {
+          for (const [stat, minVal] of Object.entries(requirements.stats)) {
+            if ((player.stats[stat as keyof PlayerStats] ?? 0) < (minVal ?? 0)) return
+          }
+        }
         if (player.stats.stamina < cost.stamina) return
         if (cost.gold && player.stats.gold < cost.gold) return
 
@@ -527,6 +533,9 @@ export const useGameStore = create<GameStore>()(
       // ── startDuel ──────────────────────────────────────────────────────
       startDuel: (duel) => set({ activeDuel: duel }),
 
+      // ── dismissDuel ────────────────────────────────────────────────────
+      dismissDuel: () => set({ activeDuel: null }),
+
       // ── performDuelAction ──────────────────────────────────────────────
       performDuelAction: (action) => {
         const state = get()
@@ -544,7 +553,7 @@ export const useGameStore = create<GameStore>()(
           const hit = statCheck(player.stats.martial, 8)
           const dmg = hit ? Math.floor(Math.random() * 6) + 3 + Math.floor(player.stats.martial / 2) : 0
           enemyHp = Math.max(0, enemyHp - dmg)
-          roundLog.push(hit ? `你の攻撃が当たった！${dmg}ダメージ！` : `攻撃が外れた！`)
+          roundLog.push(hit ? `君の攻撃が当たった！${dmg}ダメージ！` : `攻撃が外れた！`)
         } else if (action === 'defend') {
           roundLog.push('防御の構えを取った。被ダメージを半減する。')
         } else {
@@ -589,8 +598,10 @@ export const useGameStore = create<GameStore>()(
         }
 
         if (result !== 'pending') {
-          // Duel ended: resolve quest
-          set({ activeDuel: null })
+          // Keep activeDuel set so the result banner is visible in DuelModal.
+          // Apply quest outcome now; the modal's Continue button will dismiss the duel.
+          const finalDuel: DuelState = { ...updatedDuel, result }
+          set({ activeDuel: finalDuel })
           const success = result === 'win'
           if (quest) {
             const { newPlayer, logText } = computeQuestOutcome(get().player, quest, success)
@@ -765,6 +776,11 @@ export function getAvailableQuestsAt(locationId: string, player: Player): Quest[
     if (requirements.relations) {
       for (const [npcId, minVal] of Object.entries(requirements.relations)) {
         if ((player.relations[npcId] ?? 0) < minVal) return false
+      }
+    }
+    if (requirements.stats) {
+      for (const [stat, minVal] of Object.entries(requirements.stats)) {
+        if ((player.stats[stat as keyof typeof player.stats] ?? 0) < (minVal ?? 0)) return false
       }
     }
     return true

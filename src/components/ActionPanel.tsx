@@ -152,7 +152,7 @@ function ActiveQuestItem({
           完了する
         </button>
       ) : (
-        <span className={styles.questLocation}>→ {quest.locationId === 'loc_castle' ? '城主邸' : '他の場所'}で完了</span>
+        <span className={styles.questLocation}>→ {getLocation(quest.locationId)?.name ?? quest.locationId}で完了</span>
       )}
     </div>
   )

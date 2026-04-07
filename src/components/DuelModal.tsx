@@ -9,7 +9,7 @@ const ACTIONS: { type: DuelActionType; icon: string; label: string; desc: string
 ]
 
 export function DuelModal() {
-  const { activeDuel, performDuelAction } = useGameStore()
+  const { activeDuel, performDuelAction, dismissDuel } = useGameStore()
 
   if (!activeDuel) return null
 
@@ -67,11 +67,16 @@ export function DuelModal() {
           )}
         </div>
 
-        {/* Result banner */}
+        {/* Result banner + Continue button */}
         {isDone && (
-          <div className={`${styles.resultBanner} ${result === 'win' ? styles.resultWin : styles.resultLose}`}>
-            {result === 'win' ? '🏆 勝利！' : '💀 敗北…'}
-          </div>
+          <>
+            <div className={`${styles.resultBanner} ${result === 'win' ? styles.resultWin : styles.resultLose}`}>
+              {result === 'win' ? '🏆 勝利！' : '💀 敗北…'}
+            </div>
+            <button className={styles.continueBtn} onClick={dismissDuel}>
+              続ける →
+            </button>
+          </>
         )}
 
         {/* Action buttons */}

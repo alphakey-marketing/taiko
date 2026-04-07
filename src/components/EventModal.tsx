@@ -67,10 +67,10 @@ export function EventModal() {
 
 const EVENT_TYPE_LABELS: Record<string, string> = {
   personal: '個人の出来事',
-  interpersonal: '人間関係',
+  social: '人間関係',
   world: '世界の動向',
-  identity: '立身出世',
-  special: '天命の啓示',
+  career: '立身出世',
+  fate: '天命の啓示',
 }
 
 const STAT_JP: Record<string, string> = {
