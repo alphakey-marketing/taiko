@@ -29,6 +29,14 @@
   color: #9a8060;
 }
 
+.rank {
+  font-size: 0.7rem;
+  color: #a06fd4;
+  border: 1px solid #6a3fa0;
+  padding: 0 0.35rem;
+  border-radius: 3px;
+}
+
 .section {
   display: flex;
   flex-direction: column;

@@ -1,0 +1,163 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.modal {
+  background: #1a1208;
+  border: 2px solid #8b6914;
+  border-radius: 4px;
+  padding: 1.5rem 2rem;
+  width: min(480px, 95vw);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.header {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #a0814a;
+  letter-spacing: 0.1em;
+}
+
+.title {
+  text-align: center;
+  font-size: 1.25rem;
+  color: #e8d5a3;
+  margin: 0;
+}
+
+.hpBars {
+  display: flex;
+  gap: 1rem;
+}
+
+.hpSide {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.hpLabel {
+  font-size: 0.75rem;
+  color: #a0814a;
+}
+
+.hpName {
+  font-size: 0.85rem;
+  color: #e8d5a3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hpBar {
+  height: 10px;
+  background: #2d1f0a;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.hpFill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.hpFillPlayer {
+  background: linear-gradient(90deg, #2a6b2a, #5cb85c);
+}
+
+.hpFillEnemy {
+  background: linear-gradient(90deg, #8b1a1a, #d9534f);
+}
+
+.hpText {
+  font-size: 0.75rem;
+  color: #c9a855;
+  text-align: right;
+}
+
+.roundLog {
+  background: #120d04;
+  border: 1px solid #5a3e10;
+  border-radius: 3px;
+  padding: 0.5rem 0.75rem;
+  min-height: 4rem;
+  font-size: 0.8rem;
+  color: #c9a855;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.roundLogEmpty {
+  color: #5a4020;
+  font-style: italic;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.actionBtn {
+  flex: 1;
+  padding: 0.75rem 0.5rem;
+  background: transparent;
+  border: 1px solid #8b6914;
+  color: #e8d5a3;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  transition: background 0.15s;
+}
+
+.actionBtn:hover {
+  background: rgba(139, 105, 20, 0.3);
+}
+
+.actionBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.actionIcon {
+  font-size: 1.5rem;
+}
+
+.actionDesc {
+  font-size: 0.7rem;
+  color: #a0814a;
+}
+
+.resultBanner {
+  text-align: center;
+  font-size: 1.1rem;
+  padding: 0.5rem;
+  border-radius: 3px;
+}
+
+.resultWin {
+  background: rgba(42, 107, 42, 0.4);
+  color: #8bc88b;
+  border: 1px solid #4a8b4a;
+}
+
+.resultLose {
+  background: rgba(139, 26, 26, 0.4);
+  color: #d98b8b;
+  border: 1px solid #8b4a4a;
+}

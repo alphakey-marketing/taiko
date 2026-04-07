@@ -1,4 +1,5 @@
-import { useGameStore, getLocation, LOCATIONS } from '../store/gameStore'
+import { useGameStore, getLocation } from '../store/gameStore'
+import { LOCATIONS } from '../data/locations'
 import styles from './LocationPanel.module.css'
 
 export function LocationPanel() {

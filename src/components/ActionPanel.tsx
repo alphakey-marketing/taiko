@@ -1,4 +1,4 @@
-import { useGameStore, getLocation, getAvailableQuestsAt } from '../store/gameStore'
+import { useGameStore, getLocation, getAvailableQuestsAt, getQuest } from '../store/gameStore'
 import styles from './ActionPanel.module.css'
 
 export function ActionPanel() {
@@ -7,6 +7,7 @@ export function ActionPanel() {
     actionsThisTurn,
     maxActionsPerTurn,
     activeEvent,
+    activeDuel,
     pendingQuestResult,
     performAction,
     acceptQuest,
@@ -17,7 +18,7 @@ export function ActionPanel() {
   const loc = getLocation(player.currentLocationId)
   const availableQuests = loc ? getAvailableQuestsAt(loc.id, player) : []
   const actionsLeft = maxActionsPerTurn - actionsThisTurn
-  const blocked = !!activeEvent || !!pendingQuestResult
+  const blocked = !!activeEvent || !!pendingQuestResult || !!activeDuel
 
   if (!loc) return null
 
@@ -109,8 +110,6 @@ export function ActionPanel() {
 
 // ─── Sub-component ────────────────────────────────────────────────────────
 
-import { QUESTS } from '../store/gameStore'
-
 const STAT_JP: Record<string, string> = {
   martial: '武藝',
   wisdom: '智略',
@@ -133,7 +132,7 @@ function ActiveQuestItem({
   blocked: boolean
   onComplete: (id: string) => void
 }) {
-  const quest = QUESTS.find((q) => q.id === questId)
+  const quest = getQuest(questId)
   if (!quest) return null
 
   const canComplete = quest.locationId === locationId

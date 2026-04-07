@@ -1,5 +1,5 @@
 import { useGameStore } from '../store/gameStore'
-import { NPCS } from '../store/gameStore'
+import { NPCS } from '../data/npcs'
 import styles from './CharacterPanel.module.css'
 
 const STAT_DEFS = [
@@ -11,17 +11,23 @@ const STAT_DEFS = [
   { key: 'omen', label: '天命', color: '#a06fd4' },
 ] as const
 
+const RANK_LABELS: Record<string, string> = {
+  none: '無位',
+  apprentice: '陰陽師見習',
+  retainer: '家臣',
+  advisor: '軍師',
+}
+
 export function CharacterPanel() {
   const { player } = useGameStore()
   const { stats, relations } = player
-
-  const bgLabel = player.backgroundId === 'samurai_apprentice' ? '武士見習' : '商人學徒'
 
   return (
     <section className={styles.panel}>
       <div className={styles.identity}>
         <span className={styles.name}>{player.name}</span>
-        <span className={styles.bg}>{bgLabel}</span>
+        <span className={styles.bg}>陰陽師見習</span>
+        <span className={styles.rank}>{RANK_LABELS[player.rank] ?? player.rank}</span>
       </div>
 
       {/* Core Stats */}
@@ -29,8 +35,8 @@ export function CharacterPanel() {
         <h3 className={styles.sectionTitle}>能力値</h3>
         {STAT_DEFS.map(({ key, label, color }) => {
           const val = stats[key]
-          const max = key === 'fame' ? 100 : key === 'omen' ? 100 : 20
-          const pct = Math.min(100, (val / max) * 100)
+          const max = key === 'fame' ? 50 : key === 'omen' ? 100 : 20
+          const pct = Math.min(100, Math.max(0, (val / max) * 100))
           return (
             <div key={key} className={styles.statRow}>
               <span className={styles.statLabel}>{label}</span>
@@ -71,20 +77,24 @@ export function CharacterPanel() {
       <div className={styles.section}>
         <h3 className={styles.sectionTitle}>関係値</h3>
         <div className={styles.relations}>
-          {NPCS.filter((npc) => !npc.unlockFlags.length || npc.unlockFlags.every((f) => player.flags.includes(f))).map(
-            (npc) => {
-              const val = relations[npc.id] ?? npc.affectionDefault
-              const trend = val > npc.affectionDefault ? '↑' : val < npc.affectionDefault ? '↓' : '→'
-              return (
-                <div key={npc.id} className={styles.relation}>
-                  <span className={styles.npcName}>{npc.name}</span>
-                  <span className={`${styles.relVal} ${val >= 20 ? styles.high : val <= 0 ? styles.low : ''}`}>
-                    [{val}] {trend}
-                  </span>
-                </div>
-              )
-            }
-          )}
+          {NPCS.filter(
+            (npc) =>
+              !npc.unlockFlags.length ||
+              npc.unlockFlags.every((f) => player.flags.includes(f))
+          ).map((npc) => {
+            const val = relations[npc.id] ?? npc.affectionDefault
+            const trend = val > npc.affectionDefault ? '↑' : val < npc.affectionDefault ? '↓' : '→'
+            return (
+              <div key={npc.id} className={styles.relation}>
+                <span className={styles.npcName}>{npc.name}</span>
+                <span
+                  className={`${styles.relVal} ${val >= 20 ? styles.high : val <= 0 ? styles.low : ''}`}
+                >
+                  [{val}] {trend}
+                </span>
+              </div>
+            )
+          })}
         </div>
       </div>
 
@@ -97,7 +107,7 @@ export function CharacterPanel() {
               .filter((f) => !f.startsWith('event_seen_'))
               .map((f) => (
                 <span key={f} className={styles.flag}>
-                  {FLAG_LABELS[f] ?? f}
+                  {FLAG_LABELS[f] ?? f.replace(/^flag_/, '').replace(/_/g, ' ')}
                 </span>
               ))}
           </div>
@@ -109,22 +119,30 @@ export function CharacterPanel() {
 
 const FLAG_LABELS: Record<string, string> = {
   flag_tavern_visited: '酒場の常連',
-  flag_first_lord_quest: '主家への初任務',
-  flag_lord_trusted: '主君の信頼',
-  flag_official_retainer: '正式仕官',
-  flag_dojo_trial_passed: '道場の試練クリア',
-  flag_rival_defeated: '宿敵に勝利',
-  flag_rival_softened: '宿敵との和解',
-  flag_merchant_ally: '商人の信頼',
-  flag_intel_gathered: '情報収集完了',
-  flag_omen_dreamed: '天命の夢',
-  flag_omen_awakened: '天命の覚醒',
-  flag_prophecy_received: '予言を受け取る',
-  flag_mentor_teaching: '師の教えを学ぶ',
-  flag_supplies_stockpiled: '物資備蓄',
-  flag_faction_intel: '勢力情報提供',
-  flag_faction_intel_hidden: '秘密の情報',
-  flag_stranger_met: '謎の老人との出会い',
-  flag_lord_mission_assigned: '重要任務を拝命',
-  flag_omen_revealed: '御告げを受ける',
+  flag_first_omen_done: '初次占兆完了',
+  flag_lord_dream_solved: '主君の夢を解いた',
+  flag_lord_promotion_open: '昇進の道が開けた',
+  flag_dojo_trial_passed: '道場試練クリア',
+  flag_rival_respected: '浪人に認められた',
+  flag_merchant_trusted: '商人の信頼獲得',
+  flag_secret_route: '秘密の道を知る',
+  flag_independent_open: '独立の道が開けた',
+  flag_fate_awakened: '天命が目覚めた',
+  flag_village_saved: '村を救った',
+  flag_war_intel: '戦況情報を掴んだ',
+  flag_neighbors_restless: '隣国動揺',
+  flag_informant_open: '情報屋との縁',
+  flag_official_advisor: '正式に軍師となった',
+  flag_merit_ending_open: '功勳結局が近い',
+  flag_fate_crossroads_done: '命運の交差点を通った',
+  flag_fate_believer: '天命を信じる者',
+  flag_path_merit: '功勳の道',
+  flag_path_independent: '独立の道',
+  flag_path_escaped: '逃走の道',
+  flag_in_debt: '借金あり',
+  flag_chiyo_secret: '千代の秘密を知る',
+  flag_retainer_opened: '老家臣の心を開いた',
+  flag_people_trust: '民の信頼',
+  flag_unreliable: '信頼を失った',
+  flag_security_low: '治安悪化',
 }

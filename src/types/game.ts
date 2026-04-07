@@ -2,25 +2,29 @@
 
 export type Screen = 'TITLE' | 'CHARACTER_CREATION' | 'GAME' | 'GAME_OVER'
 
-export type NpcRole = 'lord' | 'mentor' | 'rival' | 'merchant' | 'spy' | 'ally'
+export type NpcRole = 'lord' | 'priestess' | 'retainer' | 'mentor' | 'merchant' | 'informant' | 'rival' | 'ronin' | 'ally'
 
-export type EventType = 'personal' | 'interpersonal' | 'world' | 'identity' | 'special'
+export type EventType = 'personal' | 'social' | 'world' | 'career' | 'rare' | 'fate'
 
 export type Season = 'spring' | 'summer' | 'autumn' | 'winter'
 
-export type LogEntryType = 'action' | 'quest' | 'event' | 'system'
+export type LogEntryType = 'action' | 'quest' | 'event' | 'duel' | 'system'
+
+export type PlayerRank = 'none' | 'apprentice' | 'retainer' | 'advisor'
+
+export type DuelActionType = 'attack' | 'defend' | 'gambit'
 
 // ─── Player Stats ─────────────────────────────────────────────────────────
 
 export interface PlayerStats {
-  martial: number // 武藝
-  wisdom: number // 智略
-  charm: number // 魅力
-  commerce: number // 商才
-  fame: number // 名聲
-  gold: number // 金錢
-  stamina: number // 體力 (0–100)
-  omen: number // 天命/運勢 (0–100)
+  martial: number    // 武藝
+  wisdom: number     // 智略 / strategy
+  charm: number      // 魅力
+  commerce: number   // 商才
+  fame: number       // 名聲
+  gold: number       // 金錢
+  stamina: number    // 體力 (0–100)
+  omen: number       // 天命/運勢 (0–100)
 }
 
 export type StatKey = keyof PlayerStats
@@ -46,7 +50,6 @@ export interface LocationAction {
   staminaCost: number
   daysCost: number
   checks: StatKey[]
-  questIds?: string[]
 }
 
 export interface Location {
@@ -80,6 +83,7 @@ export interface QuestRequirements {
   relations?: Record<string, number>
   flags?: string[]
   completedQuests?: string[]
+  rank?: PlayerRank
 }
 
 export interface QuestRewards {
@@ -88,6 +92,7 @@ export interface QuestRewards {
   stats?: Partial<PlayerStats>
   relations?: Record<string, number>
   flags?: string[]
+  rankUp?: PlayerRank
 }
 
 export interface QuestConsequences {
@@ -95,6 +100,14 @@ export interface QuestConsequences {
   fame?: number
   stats?: Partial<PlayerStats>
   relations?: Record<string, number>
+  flags?: string[]
+}
+
+export interface DuelConfig {
+  enemyName: string
+  enemyHp: number
+  enemyMartial: number
+  rounds: number
 }
 
 export interface Quest {
@@ -104,7 +117,12 @@ export interface Quest {
   locationId: string
   requirements: QuestRequirements
   cost: { days: number; stamina: number; gold?: number }
+  /** Primary stat to check */
   checks: StatKey[]
+  /** Explicit success threshold (stat + 1d6 >= threshold). Defaults to 10 if omitted. */
+  threshold?: number
+  /** If set, completing this quest opens the duel modal */
+  duelConfig?: DuelConfig
   rewards: QuestRewards
   failConsequences: QuestConsequences
 }
@@ -116,6 +134,7 @@ export interface EventOutcome {
   statChanges?: Partial<PlayerStats>
   relationChanges?: Record<string, number>
   flagsSet?: string[]
+  rankUp?: PlayerRank
   nextEventId?: string
 }
 
@@ -129,6 +148,7 @@ export interface EventChoice {
 
 export interface EventTrigger {
   turn?: number
+  minTurn?: number
   locationId?: string
   minFame?: number
   minStat?: Partial<PlayerStats>
@@ -147,12 +167,51 @@ export interface GameEvent {
   choices: EventChoice[]
 }
 
+// ─── Duel System ──────────────────────────────────────────────────────────
+
+export interface DuelState {
+  questId: string
+  enemyName: string
+  enemyHp: number
+  enemyMaxHp: number
+  playerHp: number
+  playerMaxHp: number
+  round: number
+  maxRounds: number
+  roundLog: string[]
+  result: 'pending' | 'win' | 'lose'
+}
+
+// ─── Ending ───────────────────────────────────────────────────────────────
+
+export interface EndingCondition {
+  minFame?: number
+  maxFame?: number
+  minGold?: number
+  minRank?: PlayerRank
+  maxRank?: PlayerRank
+  /** npcId → minimum relation value */
+  relations?: Record<string, number>
+  flags?: string[]
+  /** Any of these flags present → condition fails */
+  failureFlags?: string[]
+  priority: number
+}
+
+export interface Ending {
+  id: string
+  title: string
+  subtitle: string
+  description: string
+  condition: EndingCondition
+}
+
 // ─── World State ──────────────────────────────────────────────────────────
 
 export interface WorldState {
   currentSeason: Season
   omenLevel: number
-  factionPowers: Record<string, number>
+  warTension: number   // 0–100, affects world events
 }
 
 // ─── Log Entry ────────────────────────────────────────────────────────────
@@ -169,11 +228,13 @@ export interface Player {
   name: string
   backgroundId: string
   stats: PlayerStats
+  rank: PlayerRank
   currentLocationId: string
   activeQuestIds: string[]
   completedQuestIds: string[]
+  failedQuestIds: string[]
   flags: string[]
-  relations: Record<string, number> // npcId → affection
+  relations: Record<string, number> // npcId → affection value
 }
 
 // ─── Game State ───────────────────────────────────────────────────────────
@@ -187,6 +248,8 @@ export interface GameState {
   player: Player
   world: WorldState
   activeEvent: GameEvent | null
+  activeDuel: DuelState | null
   pendingQuestResult: { quest: Quest; success: boolean } | null
+  achievedEndingId: string | null
   log: LogEntry[]
 }

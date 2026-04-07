@@ -3,34 +3,48 @@ import { HUD } from '../components/HUD'
 import { LocationPanel } from '../components/LocationPanel'
 import { ActionPanel } from '../components/ActionPanel'
 import { EventModal } from '../components/EventModal'
+import { DuelModal } from '../components/DuelModal'
 import { CharacterPanel } from '../components/CharacterPanel'
 import { GameLog } from '../components/GameLog'
-import { useGameStore } from '../store/gameStore'
+import { useGameStore, getEnding } from '../store/gameStore'
 import styles from './GameScreen.module.css'
+
+const ENDING_STYLE: Record<string, string> = {
+  ending_merit_counselor: '🏆',
+  ending_independent_school: '🌸',
+  ending_fallen_shadow: '🌑',
+}
 
 export function GameScreen() {
   const [showCharPanel, setShowCharPanel] = useState(false)
-  const { player, turn, maxTurns, screen } = useGameStore()
+  const { player, turn, maxTurns, screen, achievedEndingId } = useGameStore()
 
   const isGameOver = screen === 'GAME_OVER'
-  const isWinner = player.flags.includes('flag_official_retainer')
+  const ending = achievedEndingId ? getEnding(achievedEndingId) : null
+  const icon = achievedEndingId ? (ENDING_STYLE[achievedEndingId] ?? '📜') : '📜'
 
   if (isGameOver) {
     return (
       <div className={styles.gameOver}>
         <div className={styles.gameOverBox}>
+          <div className={styles.endingIcon}>{icon}</div>
           <h1 className={styles.gameOverTitle}>
-            {isWinner ? '立志伝完結' : '幕引き'}
+            {ending ? ending.title : '幕引き'}
           </h1>
-          <p className={styles.gameOverSub}>
-            {isWinner
-              ? `${player.name}は見事に主君の信頼を勝ち取り、正式な家臣となった。`
-              : `${player.name}の${turn}回の人生が幕を閉じた。また別の人生を歩もう。`}
-          </p>
+          {ending && (
+            <p className={styles.endingSubtitle}>{ending.subtitle}</p>
+          )}
+          <div className={styles.endingDescription}>
+            {ending
+              ? ending.description
+              : `${player.name}の${turn}回の立志伝が幕を閉じた。また別の天命を歩もう。`}
+          </div>
           <div className={styles.gameOverStats}>
-            <div>名聲: {player.stats.fame}</div>
-            <div>金錢: {player.stats.gold}貫</div>
-            <div>完了任務: {player.completedQuestIds.length}</div>
+            <div>名聲: <strong>{player.stats.fame}</strong></div>
+            <div>金錢: <strong>{player.stats.gold}貫</strong></div>
+            <div>天命: <strong>{player.stats.omen}</strong></div>
+            <div>完了任務: <strong>{player.completedQuestIds.length}</strong></div>
+            <div>官職: <strong>{RANK_JP[player.rank]}</strong></div>
           </div>
           <button
             className={styles.restartBtn}
@@ -80,6 +94,14 @@ export function GameScreen() {
       </div>
 
       <EventModal />
+      <DuelModal />
     </div>
   )
+}
+
+const RANK_JP: Record<string, string> = {
+  none: '無位',
+  apprentice: '見習',
+  retainer: '家臣',
+  advisor: '軍師',
 }

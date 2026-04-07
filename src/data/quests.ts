@@ -1,183 +1,268 @@
 import type { Quest } from '../types/game'
 
 export const QUESTS: Quest[] = [
-  // ─── Castle Quests ─────────────────────────────────────────────────────
+  // ─── Q1. 初次占兆 ────────────────────────────────────────────────────────
   {
-    id: 'quest_supply_001',
-    title: '替主家採買軍糧',
-    description: '加藤大人より、近隣の市場で軍糧を調達してくるよう命じられた。商才と交渉力が問われる。',
-    locationId: 'loc_castle',
-    requirements: { fame: 5, relations: { npc_lord_kato: 10 } },
-    cost: { days: 3, stamina: 25 },
-    checks: ['commerce', 'charm'],
+    id: 'quest_first_omen',
+    title: '初次占兆',
+    description: '千代に頼まれ、神社で村民の初めての正式な占いを行う。陰陽師としての第一歩だ。',
+    locationId: 'loc_shrine',
+    requirements: {},
+    cost: { days: 2, stamina: 15 },
+    checks: ['wisdom', 'charm'],
+    threshold: 8,
     rewards: {
-      gold: 120,
-      fame: 5,
-      relations: { npc_lord_kato: 8 },
-      flags: ['flag_first_lord_quest'],
+      gold: 30,
+      fame: 3,
+      relations: { priestess: 5 },
+      flags: ['flag_first_omen_done'],
     },
     failConsequences: {
-      fame: -3,
-      relations: { npc_lord_kato: -6 },
-    },
-  },
-  {
-    id: 'quest_lord_favor_001',
-    title: '主君の信頼を得よ',
-    description: '加藤大人に忠誠を示し、家臣として認められるための試練を乗り越えよ。',
-    locationId: 'loc_castle',
-    requirements: { fame: 15, completedQuests: ['quest_supply_001'] },
-    cost: { days: 2, stamina: 20 },
-    checks: ['charm', 'wisdom'],
-    rewards: {
-      fame: 10,
-      relations: { npc_lord_kato: 15 },
-      flags: ['flag_lord_trusted'],
-    },
-    failConsequences: {
-      fame: -5,
-      relations: { npc_lord_kato: -10 },
+      fame: -1,
+      stats: { stamina: -10 },
     },
   },
 
-  // ─── Dojo Quests ───────────────────────────────────────────────────────
+  // ─── Q2. 小藩主の不安之夢 ────────────────────────────────────────────────
   {
-    id: 'quest_dojo_trial_001',
-    title: '道場の試練',
-    description: '林先生より試練を与えられた。基礎の型を完璧に披露せよ。武藝の真価が問われる。',
-    locationId: 'loc_dojo',
-    requirements: {},
-    cost: { days: 2, stamina: 30 },
-    checks: ['martial'],
+    id: 'quest_lord_nightmare',
+    title: '小藩主の不安な夢',
+    description: '直家が連日悪夢を見ているという。解夢し、心の安定を取り戻す策を伝えよ。',
+    locationId: 'loc_castle',
+    requirements: { relations: { lord: 10 } },
+    cost: { days: 2, stamina: 20 },
+    checks: ['wisdom', 'charm'],
+    threshold: 10,
     rewards: {
-      stats: { martial: 2, wisdom: 1 },
-      fame: 3,
-      relations: { npc_mentor_hayashi: 10 },
+      fame: 6,
+      relations: { lord: 8 },
+      flags: ['flag_lord_dream_solved', 'flag_lord_promotion_open'],
+    },
+    failConsequences: {
+      relations: { lord: -5, retainer: -3 },
+    },
+  },
+
+  // ─── Q3. 道場試煉 ────────────────────────────────────────────────────────
+  {
+    id: 'quest_dojo_trial',
+    title: '道場の試煉',
+    description: '師父・片桐宗真が試煉を課した。道場の弟子と対決し、陰陽師にも武の素養があることを証明せよ。',
+    locationId: 'loc_dojo',
+    requirements: { stats: { stamina: 40 } },
+    cost: { days: 1, stamina: 30 },
+    checks: ['martial'],
+    threshold: 9,
+    duelConfig: {
+      enemyName: '道場の弟子',
+      enemyHp: 20,
+      enemyMartial: 5,
+      rounds: 3,
+    },
+    rewards: {
+      stats: { martial: 2 },
+      relations: { mentor: 5 },
+      fame: 2,
       flags: ['flag_dojo_trial_passed'],
     },
     failConsequences: {
-      stats: { stamina: -10 },
-      relations: { npc_mentor_hayashi: -3 },
-    },
-  },
-  {
-    id: 'quest_rival_duel_001',
-    title: '宿敵との勝負',
-    description: '伊藤猛之助が果たし合いを申し込んできた。正々堂々と勝負し、道場での地位を確立せよ。',
-    locationId: 'loc_dojo',
-    requirements: { completedQuests: ['quest_dojo_trial_001'] },
-    cost: { days: 1, stamina: 40 },
-    checks: ['martial', 'wisdom'],
-    rewards: {
-      stats: { martial: 1 },
-      fame: 8,
-      relations: { npc_rival_ito: 15, npc_mentor_hayashi: 5 },
-      flags: ['flag_rival_defeated'],
-    },
-    failConsequences: {
       stats: { stamina: -20 },
-      fame: -2,
-      relations: { npc_rival_ito: -5 },
+      relations: { mentor: 1 },
     },
   },
 
-  // ─── Market Quests ─────────────────────────────────────────────────────
+  // ─── Q4. 軍糧採買 ────────────────────────────────────────────────────────
   {
-    id: 'quest_market_deal_001',
-    title: '市場の取引',
-    description: '鈴木宗兵衛との商談。有利な条件を引き出せるか、商才と交渉力が試される。',
+    id: 'quest_supply_run',
+    title: '軍糧採買',
+    description: '榊原兵庫より命令。軍備の糧食を市場で調達し、コストを抑えよ。',
     locationId: 'loc_market',
-    requirements: {},
-    cost: { days: 1, stamina: 15 },
-    checks: ['commerce'],
+    requirements: { fame: 3 },
+    cost: { days: 2, stamina: 20 },
+    checks: ['commerce', 'charm'],
+    threshold: 10,
     rewards: {
       gold: 80,
-      relations: { npc_merchant_suzuki: 8 },
-      flags: ['flag_merchant_ally'],
+      fame: 4,
+      relations: { retainer: 6 },
     },
     failConsequences: {
       gold: -20,
-      relations: { npc_merchant_suzuki: -5 },
+      relations: { retainer: -6 },
     },
   },
 
-  // ─── Tavern Quests ─────────────────────────────────────────────────────
+  // ─── Q5. 商人の試探 ────────────────────────────────────────────────────
   {
-    id: 'quest_tavern_info_001',
-    title: '酒場の情報収集',
-    description: '影の六から敵対勢力についての情報を集めよ。魅力で人を引き付け、秘密を聞き出せ。',
+    id: 'quest_merchant_test',
+    title: '商人の試探',
+    description: '早坂彌兵衛から話が来た。一批の荷物を転売し、判断力を見せてほしいという。',
+    locationId: 'loc_market',
+    requirements: { stats: { gold: 50 } },
+    cost: { days: 2, stamina: 15, gold: 50 },
+    checks: ['commerce'],
+    threshold: 10,
+    rewards: {
+      gold: 120,
+      relations: { merchant: 10 },
+      flags: ['flag_merchant_trusted'],
+    },
+    failConsequences: {
+      gold: -40,
+      relations: { merchant: -4 },
+    },
+  },
+
+  // ─── Q6. 黒夜中の影 ────────────────────────────────────────────────────
+  {
+    id: 'quest_night_watch',
+    title: '黒夜に潜む影',
+    description: '城下で夜に不審者が出没している。主君と榊原の命により夜回りに向かう。戦うか、説得するか。',
+    locationId: 'loc_castle',
+    requirements: { stats: { stamina: 30 } },
+    cost: { days: 1, stamina: 30 },
+    checks: ['martial', 'charm'],
+    threshold: 10,
+    rewards: {
+      fame: 5,
+      relations: { retainer: 5 },
+      flags: ['flag_night_watch_done', 'flag_informant_open'],
+    },
+    failConsequences: {
+      fame: -3,
+      stats: { stamina: -15 },
+      flags: ['flag_security_low'],
+    },
+  },
+
+  // ─── Q7. 酒館の流言 ────────────────────────────────────────────────────
+  {
+    id: 'quest_tavern_rumors',
+    title: '酒館の流言蜚語',
+    description: '鴉一に頼まれ、酒場で隣国動向の流言を収集せよ。魅力で人を引きつけ、智略で真偽を見極めよ。',
     locationId: 'loc_tavern',
-    requirements: { flags: ['flag_tavern_visited'] },
-    cost: { days: 2, stamina: 20, gold: 30 },
-    checks: ['charm', 'wisdom'],
-    rewards: {
-      stats: { wisdom: 1 },
-      fame: 4,
-      relations: { npc_spy_kage: 10 },
-      flags: ['flag_intel_gathered'],
-    },
-    failConsequences: {
-      gold: -30,
-      relations: { npc_spy_kage: -8 },
-    },
-  },
-
-  // ─── Personal Growth Quests ────────────────────────────────────────────
-  {
-    id: 'quest_shrine_omen_001',
-    title: '神社の御告げ',
-    description: '神社で祈願を続け、天命の御告げを受け取れ。天命が高い者ほど深い啓示を得られる。',
-    locationId: 'loc_shrine',
-    requirements: { stats: { omen: 20 } },
-    cost: { days: 3, stamina: 15 },
-    checks: ['omen', 'wisdom'],
-    rewards: {
-      stats: { omen: 15, wisdom: 2 },
-      flags: ['flag_omen_revealed'],
-    },
-    failConsequences: {
-      stats: { omen: -5 },
-    },
-  },
-  {
-    id: 'quest_study_001',
-    title: '書物の研究',
-    description: '難解な書物を読み解き、新たな智識を得よ。集中力と知恵が必要だ。',
-    locationId: 'loc_home',
-    requirements: {},
+    requirements: { stats: { charm: 9 }, flags: ['flag_tavern_visited'] },
     cost: { days: 2, stamina: 20 },
-    checks: ['wisdom'],
+    checks: ['charm', 'wisdom'],
+    threshold: 9,
     rewards: {
-      stats: { wisdom: 2 },
+      relations: { informant: 8 },
+      flags: ['flag_war_intel', 'flag_neighbors_restless'],
     },
     failConsequences: {
-      stats: { stamina: -10 },
+      fame: -2,
     },
   },
 
-  // ─── Advanced Quest (unlocked after progress) ──────────────────────────
+  // ─── Q8. 村の厄払い ────────────────────────────────────────────────────
   {
-    id: 'quest_identity_promotion_001',
-    title: '仕官への道',
-    description: '十分な名声と信頼を積み重ね、主君から正式な家臣として認められよ。これが立志の第一歩だ。',
+    id: 'quest_village_curse',
+    title: '村の厄払い',
+    description: '隣村の子供が病に倒れ、妖異の仕業と噂される。陰陽師として調査し、解決せよ。',
+    locationId: 'loc_shrine',
+    requirements: { fame: 5 },
+    cost: { days: 3, stamina: 25 },
+    checks: ['wisdom', 'omen'],
+    threshold: 11,
+    rewards: {
+      fame: 8,
+      relations: { priestess: 5 },
+      flags: ['flag_fate_awakened', 'flag_village_saved'],
+    },
+    failConsequences: {
+      fame: -5,
+      relations: { priestess: -5 },
+      flags: ['flag_village_failed'],
+    },
+  },
+
+  // ─── Q9. 浪人の挑戦 ────────────────────────────────────────────────────
+  {
+    id: 'quest_rival_duel',
+    title: '浪人の挑戦',
+    description: '朧雨之介が挑戦状を叩きつけてきた。「言葉と占いで出世した貴様に、刀で勝てるか」と問う。',
+    locationId: 'loc_dojo',
+    requirements: { fame: 8 },
+    cost: { days: 1, stamina: 40 },
+    checks: ['martial', 'wisdom'],
+    threshold: 10,
+    duelConfig: {
+      enemyName: '朧 雨之介',
+      enemyHp: 30,
+      enemyMartial: 8,
+      rounds: 4,
+    },
+    rewards: {
+      fame: 6,
+      relations: { rival: 4 },
+      flags: ['flag_rival_respected'],
+    },
+    failConsequences: {
+      fame: -4,
+      stats: { stamina: -25 },
+    },
+  },
+
+  // ─── Q10. 密談の夜 ───────────────────────────────────────────────────────
+  {
+    id: 'quest_secret_meeting',
+    title: '密談の夜',
+    description: '商人と情報屋に秘密の会合に招かれた。知略と魅力で場を仕切り、有利な情報か資金を得よ。',
+    locationId: 'loc_tavern',
+    requirements: {
+      relations: { merchant: 10, informant: 10 },
+    },
+    cost: { days: 2, stamina: 20 },
+    checks: ['wisdom', 'charm'],
+    threshold: 12,
+    rewards: {
+      gold: 200,
+      flags: ['flag_secret_route', 'flag_independent_open'],
+    },
+    failConsequences: {
+      relations: { merchant: -5, informant: -5 },
+      flags: ['flag_unreliable'],
+    },
+  },
+
+  // ─── Q11. 直家の試問 ─────────────────────────────────────────────────────
+  {
+    id: 'quest_lord_exam',
+    title: '直家の試問',
+    description: '直家から総合試問が課された。計策・人物観察・胆力を三段階で試される。成功すれば正式に仕官できる。',
     locationId: 'loc_castle',
     requirements: {
-      fame: 30,
-      relations: { npc_lord_kato: 30 },
-      completedQuests: ['quest_supply_001', 'quest_lord_favor_001'],
-      flags: ['flag_lord_trusted'],
+      fame: 10,
+      relations: { lord: 15 },
+      completedQuests: ['quest_lord_nightmare'],
     },
-    cost: { days: 5, stamina: 30 },
-    checks: ['charm', 'wisdom', 'martial'],
+    cost: { days: 3, stamina: 30 },
+    checks: ['wisdom', 'charm', 'martial'],
+    threshold: 11,
     rewards: {
-      fame: 20,
-      gold: 200,
-      relations: { npc_lord_kato: 20 },
-      flags: ['flag_official_retainer'],
+      fame: 10,
+      rankUp: 'advisor',
+      relations: { lord: 12 },
+      flags: ['flag_official_advisor', 'flag_merit_ending_open'],
     },
     failConsequences: {
-      fame: -10,
-      relations: { npc_lord_kato: -15 },
+      relations: { lord: -8 },
     },
+  },
+
+  // ─── Q12. 命運の交差点 ───────────────────────────────────────────────────
+  {
+    id: 'quest_fate_crossroads',
+    title: '命運の交差点',
+    description: '月讀婆婆が告げた——「近く、あなたは一度だけ命運を変える選択ができる」。その時が来た。',
+    locationId: 'loc_home',
+    requirements: { flags: ['flag_fate_awakened'] },
+    cost: { days: 1, stamina: 10 },
+    checks: [],
+    threshold: 0,
+    rewards: {
+      flags: ['flag_fate_crossroads_done'],
+    },
+    failConsequences: {},
   },
 ]
