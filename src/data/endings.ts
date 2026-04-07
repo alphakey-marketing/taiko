@@ -22,7 +22,7 @@ export const ENDINGS: Ending[] = [
       '権力の中心を離れたあなたは、城の郊外に自らの占術流派を開いた。武士も庶民も、ここへ来て運命の問いを立てる。あなたの名は「天命を見通す者」として静かに、しかし確かに広まっていった。',
     condition: {
       minFame: 15,
-      minGold: 400,
+      minGold: 250,
       maxRank: 'retainer',
       relations: { merchant: 15, priestess: 15 },
       failureFlags: ['flag_merit_ending_open'],

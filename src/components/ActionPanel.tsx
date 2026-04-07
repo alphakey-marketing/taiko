@@ -1,4 +1,5 @@
 import { useGameStore, getLocation, getAvailableQuestsAt, getQuest } from '../store/gameStore'
+import { playClick, playTurnEnd, playSuccess } from '../utils/sound'
 import styles from './ActionPanel.module.css'
 
 export function ActionPanel() {
@@ -41,7 +42,7 @@ export function ActionPanel() {
             <button
               key={action.id}
               className={`${styles.actionBtn} ${disabled ? styles.disabled : ''}`}
-              onClick={() => performAction(action.id)}
+              onClick={() => { playClick(); performAction(action.id) }}
               disabled={disabled}
               title={action.description}
             >
@@ -65,12 +66,18 @@ export function ActionPanel() {
               <div className={styles.questName}>{quest.title}</div>
               <div className={styles.questDesc}>{quest.description}</div>
               <div className={styles.questMeta}>
-                判定: {quest.checks.map((c) => STAT_JP[c]).join(' / ')} ·
-                体力 -{quest.cost.stamina} · {quest.cost.days}日
+                判定: {quest.checks.length > 0
+                  ? `${quest.checks.map((c) => STAT_JP[c]).join(' / ')} (難易度 ${quest.threshold ?? 10})`
+                  : '自動成功'}
+              </div>
+              <div className={styles.questCost}>
+                体力 -{quest.cost.stamina}
+                {quest.cost.gold ? ` · 金 -${quest.cost.gold}貫` : ''}
+                {' · '}{quest.cost.days}日
               </div>
               <button
                 className={styles.acceptBtn}
-                onClick={() => acceptQuest(quest.id)}
+                onClick={() => { playClick(); acceptQuest(quest.id) }}
                 disabled={blocked}
               >
                 受ける
@@ -99,7 +106,7 @@ export function ActionPanel() {
       {/* End Turn */}
       <button
         className={styles.endTurnBtn}
-        onClick={endTurn}
+        onClick={() => { playTurnEnd(); endTurn() }}
         disabled={blocked}
       >
         次の回へ進む →
@@ -146,7 +153,7 @@ function ActiveQuestItem({
       {canComplete ? (
         <button
           className={styles.completeBtn}
-          onClick={() => onComplete(quest.id)}
+          onClick={() => { playSuccess(); onComplete(quest.id) }}
           disabled={blocked}
         >
           完了する

@@ -1,5 +1,6 @@
 import { useGameStore } from '../store/gameStore'
 import type { DuelActionType } from '../types/game'
+import { playHit, playClick } from '../utils/sound'
 import styles from './DuelModal.module.css'
 
 const ACTIONS: { type: DuelActionType; icon: string; label: string; desc: string }[] = [
@@ -73,7 +74,7 @@ export function DuelModal() {
             <div className={`${styles.resultBanner} ${result === 'win' ? styles.resultWin : styles.resultLose}`}>
               {result === 'win' ? '🏆 勝利！' : '💀 敗北…'}
             </div>
-            <button className={styles.continueBtn} onClick={dismissDuel}>
+            <button className={styles.continueBtn} onClick={() => { playClick(); dismissDuel() }}>
               続ける →
             </button>
           </>
@@ -86,7 +87,7 @@ export function DuelModal() {
               <button
                 key={a.type}
                 className={styles.actionBtn}
-                onClick={() => performDuelAction(a.type)}
+                onClick={() => { playHit(); performDuelAction(a.type) }}
               >
                 <span className={styles.actionIcon}>{a.icon}</span>
                 <span>{a.label}</span>

@@ -119,6 +119,11 @@
   color: #7a6050;
 }
 
+.questCost {
+  font-size: 0.7rem;
+  color: #8a6840;
+}
+
 .questLocation {
   font-size: 0.7rem;
   color: #7a6050;

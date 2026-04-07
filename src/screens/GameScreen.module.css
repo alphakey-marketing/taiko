@@ -142,10 +142,53 @@
 .gameOverStats {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem 1.5rem;
+  gap: 0.5rem 1.25rem;
   font-size: 0.85rem;
   color: #d4b896;
   justify-content: center;
+  background: rgba(0,0,0,0.2);
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  border: 1px solid #2a1a08;
+  width: 100%;
+}
+
+.gameOverMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  font-size: 0.82rem;
+  color: #9a8060;
+  justify-content: center;
+}
+
+.questSummary {
+  width: 100%;
+  text-align: left;
+}
+
+.questSummaryTitle {
+  font-size: 0.75rem;
+  color: #9a8060;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.questList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+}
+
+.questBadge {
+  font-size: 0.72rem;
+  color: #c9a855;
+  background: rgba(139, 90, 42, 0.2);
+  border: 1px solid #5a3a1a;
+  padding: 2px 8px;
+  border-radius: 2px;
 }
 
 .restartBtn {

@@ -1,5 +1,6 @@
 import { useGameStore, getLocation } from '../store/gameStore'
 import { LOCATIONS } from '../data/locations'
+import { playClick } from '../utils/sound'
 import styles from './LocationPanel.module.css'
 
 export function LocationPanel() {
@@ -18,7 +19,7 @@ export function LocationPanel() {
             <button
               key={loc.id}
               className={`${styles.locationBtn} ${isActive ? styles.active : ''} ${locked ? styles.locked : ''}`}
-              onClick={() => !locked && moveToLocation(loc.id)}
+              onClick={() => { if (!locked) { playClick(); moveToLocation(loc.id) } }}
               disabled={locked}
               title={locked ? `名聲${loc.requiredFame}以上が必要` : loc.description}
             >

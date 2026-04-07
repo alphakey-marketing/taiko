@@ -32,7 +32,7 @@ export const QUESTS: Quest[] = [
     requirements: { relations: { lord: 10 } },
     cost: { days: 2, stamina: 20 },
     checks: ['wisdom', 'charm'],
-    threshold: 10,
+    threshold: 9,
     rewards: {
       fame: 6,
       relations: { lord: 8 },
@@ -80,7 +80,7 @@ export const QUESTS: Quest[] = [
     requirements: { fame: 3 },
     cost: { days: 2, stamina: 20 },
     checks: ['commerce', 'charm'],
-    threshold: 10,
+    threshold: 8,
     rewards: {
       gold: 80,
       fame: 4,
@@ -101,7 +101,7 @@ export const QUESTS: Quest[] = [
     requirements: { stats: { gold: 50 } },
     cost: { days: 2, stamina: 15, gold: 50 },
     checks: ['commerce'],
-    threshold: 10,
+    threshold: 8,
     rewards: {
       gold: 120,
       relations: { merchant: 10 },
@@ -122,7 +122,7 @@ export const QUESTS: Quest[] = [
     requirements: { stats: { stamina: 30 } },
     cost: { days: 1, stamina: 30 },
     checks: ['martial', 'charm'],
-    threshold: 10,
+    threshold: 9,
     rewards: {
       fame: 5,
       relations: { retainer: 5 },
