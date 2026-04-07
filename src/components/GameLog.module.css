@@ -1,0 +1,55 @@
+.log {
+  background: #120a02;
+  border: 1px solid #3a2a10;
+  border-radius: 4px;
+  padding: 0.75rem;
+  overflow-y: auto;
+}
+
+.title {
+  font-size: 0.65rem;
+  color: #6a5040;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin: 0 0 0.5rem;
+}
+
+.entries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: #7a6050;
+}
+
+.icon {
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+  opacity: 0.7;
+}
+
+.text {
+  flex: 1;
+}
+
+.entry.action .text { color: #a09080; }
+.entry.quest .text { color: #a0b880; }
+.entry.event .text { color: #a880c8; }
+.entry.system {
+  font-style: italic;
+}
+.entry.system .text { color: #5a4030; }
+
+.empty {
+  font-size: 0.75rem;
+  color: #5a4030;
+  font-style: italic;
+}

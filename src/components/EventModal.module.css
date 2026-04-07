@@ -1,0 +1,145 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 1rem;
+  backdrop-filter: blur(2px);
+}
+
+.modal {
+  background: linear-gradient(160deg, #1e0e04 0%, #2d1800 100%);
+  border: 2px solid #8b5a2a;
+  border-radius: 6px;
+  padding: 2rem;
+  max-width: 480px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 200, 100, 0.1);
+}
+
+.modal.success {
+  border-color: #2a8b3a;
+}
+
+.modal.failure {
+  border-color: #6d1a1a;
+}
+
+.tag {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #9a8060;
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-size: 1.1rem;
+  color: #e8c87a;
+  margin: 0 0 1rem;
+  line-height: 1.4;
+}
+
+.body {
+  font-size: 0.9rem;
+  color: #d4b896;
+  line-height: 1.8;
+  margin: 0 0 1.25rem;
+  white-space: pre-line;
+}
+
+.rewards {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.rewards span {
+  font-size: 0.8rem;
+  color: #a0d888;
+  background: #1a3a10;
+  border: 1px solid #2a5a20;
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+
+.consequences {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.consequences span {
+  font-size: 0.8rem;
+  color: #e88888;
+  background: #3a1010;
+  border: 1px solid #5a2020;
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.choiceBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1rem;
+  background: #2a1a08;
+  border: 1px solid #6a4a20;
+  border-radius: 3px;
+  color: #d4b896;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+  font-family: inherit;
+}
+
+.choiceBtn:hover {
+  background: #3d2810;
+  border-color: #c23b3b;
+  color: #e8c87a;
+  transform: translateX(2px);
+}
+
+.choiceLabel {
+  font-weight: 500;
+}
+
+.choiceCheck {
+  font-size: 0.7rem;
+  color: #9a8060;
+  padding: 1px 6px;
+  background: #1a0f05;
+  border-radius: 2px;
+}
+
+.closeBtn {
+  width: 100%;
+  padding: 0.65rem;
+  background: #2a1a08;
+  border: 1px solid #6a4a20;
+  border-radius: 3px;
+  color: #d4b896;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  margin-top: 0.5rem;
+}
+
+.closeBtn:hover {
+  background: #3d2810;
+  border-color: #8b5a2a;
+  color: #e8c87a;
+}

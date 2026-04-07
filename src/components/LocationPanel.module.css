@@ -1,0 +1,84 @@
+.panel {
+  background: #1a0f05;
+  border: 1px solid #5a3a1a;
+  border-radius: 4px;
+  padding: 1rem;
+}
+
+.title {
+  font-size: 0.8rem;
+  color: #9a8060;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin: 0 0 0.75rem;
+  border-bottom: 1px solid #3a2a10;
+  padding-bottom: 0.4rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.locationBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.6rem 0.5rem;
+  background: #2a1a08;
+  border: 1px solid #5a3a1a;
+  border-radius: 3px;
+  color: #d4b896;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  font-family: inherit;
+}
+
+.locationBtn:hover:not(:disabled) {
+  background: #3d2510;
+  border-color: #8b5a2a;
+  color: #e8c87a;
+}
+
+.locationBtn.active {
+  background: #3d1a00;
+  border-color: #c23b3b;
+  color: #e8c87a;
+}
+
+.locationBtn.locked {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.locName {
+  font-weight: 500;
+}
+
+.lockIcon {
+  font-size: 0.7rem;
+}
+
+.indicator {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  background: #c23b3b;
+  border-radius: 50%;
+}
+
+.description {
+  margin: 0.75rem 0 0;
+  font-size: 0.75rem;
+  color: #9a8060;
+  line-height: 1.5;
+  border-top: 1px solid #3a2a10;
+  padding-top: 0.5rem;
+}
