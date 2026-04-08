@@ -4,6 +4,7 @@ import { LocationPanel } from '../components/LocationPanel'
 import { ActionPanel } from '../components/ActionPanel'
 import { EventModal } from '../components/EventModal'
 import { DuelModal } from '../components/DuelModal'
+import { NpcModal } from '../components/NpcModal'
 import { CharacterPanel } from '../components/CharacterPanel'
 import { GameLog } from '../components/GameLog'
 import { TutorialModal } from '../components/TutorialModal'
@@ -114,6 +115,7 @@ export function GameScreen() {
 
       <EventModal />
       <DuelModal />
+      <NpcModal />
       <TutorialModal />
     </div>
   )

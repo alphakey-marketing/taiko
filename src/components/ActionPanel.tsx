@@ -1,5 +1,5 @@
 import { useGameStore, getLocation, getAvailableQuestsAt, getQuest, getNpc } from '../store/gameStore'
-import { playClick, playTurnEnd, playSuccess } from '../utils/sound'
+import { playClick, playTurnEnd, playSuccess, playEventOpen } from '../utils/sound'
 import { TutorialHint } from './TutorialHint'
 import styles from './ActionPanel.module.css'
 
@@ -59,6 +59,28 @@ export function ActionPanel() {
         })}
       </div>
 
+      {/* NPCs at this location */}
+      {loc.npcIds.length > 0 && (
+        <div className={styles.npcSection}>
+          {loc.npcIds.map((npcId) => {
+            const npc = getNpc(npcId)
+            if (!npc) return null
+            const rel = player.relations[npcId] ?? 0
+            return (
+              <button
+                key={npcId}
+                className={styles.npcBtn}
+                onClick={() => { playEventOpen(); openNpcModal(npcId) }}
+                title={`${npc.name}との関係値: ${rel}`}
+              >
+                <span className={styles.npcName}>{npc.name}</span>
+                <span className={styles.npcRel}>{rel >= 0 ? '+' : ''}{rel}</span>
+              </button>
+            )
+          })}
+        </div>
+      )}
+
       {/* Available Quests at this location */}
       {availableQuests.length > 0 && (
         <div className={styles.questSection}>
@@ -104,6 +126,9 @@ export function ActionPanel() {
           ))}
         </div>
       )}
+
+      {/* Contextual tutorial hint */}
+      <TutorialHint />
 
       {/* End Turn */}
       <button
