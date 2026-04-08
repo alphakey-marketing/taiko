@@ -1,5 +1,7 @@
 import { useGameStore } from '../store/gameStore'
 import { NPCS } from '../data/npcs'
+import { BACKGROUNDS } from '../data/backgrounds'
+import { ITEMS } from '../data/items'
 import styles from './CharacterPanel.module.css'
 
 const STAT_DEFS = [
@@ -13,20 +15,35 @@ const STAT_DEFS = [
 
 const RANK_LABELS: Record<string, string> = {
   none: '無位',
-  apprentice: '陰陽師見習',
+  apprentice: '見習',
   retainer: '家臣',
   advisor: '軍師',
+}
+
+const ITEM_FLAGS: Record<string, string> = {
+  flag_item_tengu_fan: 'item_tengu_fan',
+  flag_item_old_blade: 'item_old_blade',
+  flag_item_merchant_abacus: 'item_merchant_abacus',
+  flag_item_star_grimoire: 'item_star_grimoire',
+  flag_item_shichifuku_seal: 'item_shichifuku_seal',
 }
 
 export function CharacterPanel() {
   const { player } = useGameStore()
   const { stats, relations } = player
+  const bg = BACKGROUNDS.find((b) => b.id === player.backgroundId)
+
+  // Collect items the player has acquired (via flag)
+  const acquiredItems = Object.entries(ITEM_FLAGS)
+    .filter(([flag]) => player.flags.includes(flag))
+    .map(([, itemId]) => ITEMS.find((it) => it.id === itemId))
+    .filter(Boolean) as typeof ITEMS
 
   return (
     <section className={styles.panel}>
       <div className={styles.identity}>
         <span className={styles.name}>{player.name}</span>
-        <span className={styles.bg}>陰陽師見習</span>
+        <span className={styles.bg}>{bg?.name ?? '陰陽師見習'}</span>
         <span className={styles.rank}>{RANK_LABELS[player.rank] ?? player.rank}</span>
       </div>
 
@@ -98,6 +115,20 @@ export function CharacterPanel() {
         </div>
       </div>
 
+      {/* Acquired Items */}
+      {acquiredItems.length > 0 && (
+        <div className={styles.section}>
+          <h3 className={styles.sectionTitle}>所持品</h3>
+          <div className={styles.flags}>
+            {acquiredItems.map((item) => (
+              <span key={item.id} className={styles.flag} title={item.description}>
+                {SLOT_ICON[item.slot]} {item.name}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Flags / Achievements */}
       {player.flags.length > 0 && (
         <div className={styles.section}>
@@ -115,6 +146,12 @@ export function CharacterPanel() {
       )}
     </section>
   )
+}
+
+const SLOT_ICON: Record<string, string> = {
+  weapon: '⚔️',
+  accessory: '✨',
+  scroll: '📜',
 }
 
 const FLAG_LABELS: Record<string, string> = {

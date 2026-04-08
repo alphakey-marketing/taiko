@@ -20,7 +20,7 @@ export function TitleScreen() {
         <button className={styles.startBtn} onClick={goToCharacterCreation}>
           立志を始める
         </button>
-        <p className={styles.hint}>Phase 0 &amp; 1 MVP</p>
+        <p className={styles.hint}>Alpha</p>
       </div>
     </div>
   )

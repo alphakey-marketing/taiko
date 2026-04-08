@@ -404,6 +404,80 @@ export const useGameStore = create<GameStore>()(
           }
         }
 
+        // ── Castle actions ─────────────────────────────────────────────
+        if (actionId === 'act_audience') {
+          const relGain = checkResult ? 3 : 1
+          set((s) => ({
+            player: {
+              ...s.player,
+              relations: {
+                ...s.player.relations,
+                lord: (s.player.relations['lord'] ?? 0) + relGain,
+              },
+            },
+          }))
+        }
+
+        if (actionId === 'act_report') {
+          const relGain = checkResult ? 2 : 0
+          const fameGain = checkResult ? 1 : 0
+          newStats.fame = newStats.fame + fameGain
+          set((s) => ({
+            player: {
+              ...s.player,
+              relations: {
+                ...s.player.relations,
+                retainer: (s.player.relations['retainer'] ?? 0) + relGain,
+              },
+            },
+          }))
+        }
+
+        // ── Market actions ─────────────────────────────────────────────
+        if (actionId === 'act_gather_info') {
+          if (checkResult) {
+            newStats.wisdom = Math.min(20, newStats.wisdom + 1)
+            set((s) => ({
+              player: {
+                ...s.player,
+                relations: {
+                  ...s.player.relations,
+                  merchant: (s.player.relations['merchant'] ?? 0) + 1,
+                },
+              },
+            }))
+          }
+        }
+
+        // ── Tavern actions ─────────────────────────────────────────────
+        if (actionId === 'act_socialize') {
+          const relGain = checkResult ? 2 : 0
+          set((s) => ({
+            player: {
+              ...s.player,
+              relations: {
+                ...s.player.relations,
+                informant: (s.player.relations['informant'] ?? 0) + relGain,
+                rival: (s.player.relations['rival'] ?? 0) + (checkResult ? 1 : 0),
+              },
+            },
+          }))
+        }
+
+        if (actionId === 'act_listen') {
+          if (checkResult) {
+            set((s) => ({
+              player: {
+                ...s.player,
+                relations: {
+                  ...s.player.relations,
+                  informant: (s.player.relations['informant'] ?? 0) + 1,
+                },
+              },
+            }))
+          }
+        }
+
         const resultText = checkResult
           ? `${action.label}を行った。${action.checks.length > 0 ? '成功！' : ''}`
           : `${action.label}を試みたが、うまくいかなかった。`

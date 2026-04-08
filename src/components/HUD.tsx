@@ -1,4 +1,5 @@
 import { useGameStore } from '../store/gameStore'
+import { BACKGROUNDS } from '../data/backgrounds'
 import styles from './HUD.module.css'
 
 const STAT_LABELS: Record<string, string> = {
@@ -29,12 +30,13 @@ const RANK_LABELS: Record<string, string> = {
 export function HUD() {
   const { player, turn, maxTurns, world, actionsThisTurn, maxActionsPerTurn } = useGameStore()
   const { stats } = player
+  const bg = BACKGROUNDS.find((b) => b.id === player.backgroundId)
 
   return (
     <header className={styles.hud}>
       <div className={styles.identity}>
         <span className={styles.name}>{player.name}</span>
-        <span className={styles.badge}>陰陽師見習</span>
+        <span className={styles.badge}>{bg?.name ?? '陰陽師見習'}</span>
         <span className={styles.badge} title="官職">{RANK_LABELS[player.rank] ?? player.rank}</span>
         <span className={styles.season}>{SEASON_LABELS[world.currentSeason]}</span>
       </div>
