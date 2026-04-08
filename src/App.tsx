@@ -2,6 +2,7 @@ import { useGameStore } from './store/gameStore'
 import { TitleScreen } from './screens/TitleScreen'
 import { CharacterCreation } from './screens/CharacterCreation'
 import { GameScreen } from './screens/GameScreen'
+import { GameOverScreen } from './screens/GameOverScreen'
 import './App.css'
 
 function App() {
@@ -13,8 +14,9 @@ function App() {
     case 'CHARACTER_CREATION':
       return <CharacterCreation />
     case 'GAME':
-    case 'GAME_OVER':
       return <GameScreen />
+    case 'GAME_OVER':
+      return <GameOverScreen />
     default:
       return <TitleScreen />
   }
