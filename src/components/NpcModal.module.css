@@ -1,0 +1,129 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 110;
+  padding: 1rem;
+  backdrop-filter: blur(2px);
+}
+
+.modal {
+  background: linear-gradient(160deg, #0e1a1e 0%, #0a2030 100%);
+  border: 2px solid #2a5a8b;
+  border-radius: 6px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(100, 180, 255, 0.08);
+}
+
+.closeX {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: transparent;
+  border: none;
+  color: #6a9ab0;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-family: inherit;
+  transition: color 0.15s;
+}
+
+.closeX:hover {
+  color: #c8e8ff;
+}
+
+.header {
+  margin-bottom: 1.25rem;
+}
+
+.roleTag {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #6a9ab0;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.name {
+  font-size: 1.2rem;
+  color: #c8e8ff;
+  margin: 0;
+}
+
+.relSection {
+  margin-bottom: 1.25rem;
+}
+
+.relHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.4rem;
+}
+
+.relTitle {
+  font-size: 0.75rem;
+  color: #6a9ab0;
+  letter-spacing: 0.1em;
+}
+
+.relValue {
+  font-size: 0.85rem;
+  color: #a8d4f0;
+}
+
+.relLabel {
+  font-size: 0.75rem;
+  color: #78b4d8;
+}
+
+.relBarBg {
+  height: 6px;
+  background: #0a1828;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid #1a3a5a;
+}
+
+.relBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, #1a5a8b, #5abcff);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.relHint {
+  font-size: 0.78rem;
+  color: #6a9ab0;
+  margin: 0.5rem 0 0;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.closeBtn {
+  width: 100%;
+  padding: 0.65rem;
+  background: #0e2038;
+  border: 1px solid #2a5a8b;
+  border-radius: 3px;
+  color: #a8d4f0;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.closeBtn:hover {
+  background: #183050;
+  border-color: #5abcff;
+  color: #c8e8ff;
+}

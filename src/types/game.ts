@@ -59,6 +59,8 @@ export interface Location {
   actions: LocationAction[]
   npcIds: string[]
   requiredFame: number
+  /** Any of these flags unlocks the location regardless of requiredFame */
+  unlockFlags?: string[]
 }
 
 // ─── NPC ──────────────────────────────────────────────────────────────────
@@ -73,6 +75,17 @@ export interface Npc {
   trustDefault: number
   unlockFlags: string[]
   eventPool: string[]
+}
+
+// ─── Item ─────────────────────────────────────────────────────────────────
+
+export interface Item {
+  id: string
+  name: string
+  slot: 'weapon' | 'accessory' | 'scroll'
+  statBonus: Partial<PlayerStats>
+  description: string
+  flavorText: string
 }
 
 // ─── Quest ────────────────────────────────────────────────────────────────
@@ -195,6 +208,8 @@ export interface EndingCondition {
   maxRank?: PlayerRank
   /** npcId → minimum relation value */
   relations?: Record<string, number>
+  /** stat key → minimum value */
+  minStat?: Partial<PlayerStats>
   flags?: string[]
   /** Any of these flags present → condition fails */
   failureFlags?: string[]
@@ -238,6 +253,19 @@ export interface Player {
   failedQuestIds: string[]
   flags: string[]
   relations: Record<string, number> // npcId → affection value
+  equippedItems?: string[]           // item ids, max 2 slots
+  school?: string                    // active school id, set once in mid-game
+}
+
+// ─── Achievement ──────────────────────────────────────────────────────────
+
+export interface Achievement {
+  id: string
+  title: string
+  description: string
+  icon: string
+  /** Returns true when the achievement should unlock */
+  check: (state: GameState) => boolean
 }
 
 // ─── Game State ───────────────────────────────────────────────────────────
@@ -252,7 +280,10 @@ export interface GameState {
   world: WorldState
   activeEvent: GameEvent | null
   activeDuel: DuelState | null
+  activeNpcId: string | null
   pendingQuestResult: { quest: Quest; success: boolean } | null
   achievedEndingId: string | null
+  unlockedAchievementIds: string[]
+  newGamePlusBonusId: string | null
   log: LogEntry[]
 }

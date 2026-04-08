@@ -20,6 +20,7 @@ import { NPCS } from '../data/npcs'
 import { QUESTS } from '../data/quests'
 import { EVENTS } from '../data/events'
 import { ENDINGS } from '../data/endings'
+import { ACHIEVEMENTS } from '../data/achievements'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────
 
@@ -125,6 +126,13 @@ function evaluateEnding(state: GameState): string | null {
     if (c.minRank !== undefined && !rankGte(player.rank, c.minRank)) continue
     if (c.maxRank !== undefined && !rankLte(player.rank, c.maxRank)) continue
 
+    if (c.minStat) {
+      const statOk = Object.entries(c.minStat).every(
+        ([stat, minVal]) => (player.stats[stat as keyof PlayerStats] ?? 0) >= (minVal ?? 0)
+      )
+      if (!statOk) continue
+    }
+
     if (c.relations) {
       const relOk = Object.entries(c.relations).every(
         ([npcId, minVal]) => (player.relations[npcId] ?? 0) >= minVal
@@ -139,6 +147,16 @@ function evaluateEnding(state: GameState): string | null {
     return ending.id
   }
   return null
+}
+
+/** Check and return newly unlocked achievement ids */
+function checkAchievements(state: GameState): string[] {
+  const newIds: string[] = []
+  for (const ach of ACHIEVEMENTS) {
+    if (state.unlockedAchievementIds.includes(ach.id)) continue
+    if (ach.check(state)) newIds.push(ach.id)
+  }
+  return newIds
 }
 
 // ─── Store Interface ───────────────────────────────────────────────────────
@@ -162,6 +180,9 @@ interface GameStore extends GameState {
   startDuel: (duel: DuelState) => void
   performDuelAction: (action: DuelActionType) => void
   dismissDuel: () => void
+  // NPC Modal
+  openNpcModal: (npcId: string) => void
+  closeNpcModal: () => void
   // Turn
   endTurn: () => void
   // Misc
@@ -199,6 +220,7 @@ export const useGameStore = create<GameStore>()(
         failedQuestIds: [],
         flags: [],
         relations: {},
+        equippedItems: [],
       },
       world: {
         currentSeason: 'spring',
@@ -207,8 +229,11 @@ export const useGameStore = create<GameStore>()(
       },
       activeEvent: null,
       activeDuel: null,
+      activeNpcId: null,
       pendingQuestResult: null,
       achievedEndingId: null,
+      unlockedAchievementIds: [],
+      newGamePlusBonusId: null,
       log: [],
 
       // ── addLog ─────────────────────────────────────────────────────────
@@ -219,13 +244,26 @@ export const useGameStore = create<GameStore>()(
       },
 
       // ── goToCharacterCreation ──────────────────────────────────────────
-      goToCharacterCreation: () => set({ screen: 'CHARACTER_CREATION', achievedEndingId: null }),
+      goToCharacterCreation: () => {
+        const state = get()
+        const achievedId = state.achievedEndingId
+        set({
+          screen: 'CHARACTER_CREATION',
+          achievedEndingId: null,
+          newGamePlusBonusId: achievedId,
+        })
+      },
 
       // ── startNewGame ───────────────────────────────────────────────────
       startNewGame: (playerName, backgroundId) => {
         const bg = BACKGROUNDS.find((b) => b.id === backgroundId) ?? BACKGROUNDS[0]
         const stats = buildInitialStats(bg)
         const relations = buildInitialRelations(bg)
+
+        // Set background-specific starting flags
+        const startFlags: string[] = []
+        if (bg.id === 'samurai_apprentice') startFlags.push('flag_bg_samurai')
+        if (bg.id === 'fallen_merchant') startFlags.push('flag_bg_merchant')
 
         const player: Player = {
           name: playerName,
@@ -236,9 +274,15 @@ export const useGameStore = create<GameStore>()(
           activeQuestIds: [],
           completedQuestIds: [],
           failedQuestIds: [],
-          flags: [],
+          flags: startFlags,
           relations,
+          equippedItems: [],
         }
+        const bgIntro = bg.id === 'samurai_apprentice'
+          ? '武士見習いとして、剣の道を歩め。'
+          : bg.id === 'fallen_merchant'
+          ? '没落商家の子として、商才で世を切り開け。'
+          : '陰陽師見習いとして、天命の道を歩め。'
         set({
           screen: 'GAME',
           turn: 1,
@@ -247,9 +291,10 @@ export const useGameStore = create<GameStore>()(
           world: { currentSeason: 'spring', omenLevel: 10, warTension: 0 },
           activeEvent: null,
           activeDuel: null,
+          activeNpcId: null,
           pendingQuestResult: null,
           achievedEndingId: null,
-          log: [{ turn: 1, text: `${playerName}の立志伝が始まった。陰陽師見習いとして、天命の道を歩め。`, type: 'system' }],
+          log: [{ turn: 1, text: `${playerName}の立志伝が始まった。${bgIntro}`, type: 'system' }],
         })
       },
 
@@ -258,7 +303,9 @@ export const useGameStore = create<GameStore>()(
         const state = get()
         const loc = LOCATIONS.find((l) => l.id === locationId)
         if (!loc) return
-        if (loc.requiredFame > state.player.stats.fame) return
+        const fameLocked = loc.requiredFame > state.player.stats.fame
+        const flagUnlocked = loc.unlockFlags?.some((f) => state.player.flags.includes(f)) ?? false
+        if (fameLocked && !flagUnlocked) return
 
         const flags = [...state.player.flags]
         if (locationId === 'loc_tavern' && !flags.includes('flag_tavern_visited')) {
@@ -341,6 +388,20 @@ export const useGameStore = create<GameStore>()(
           const earn = checkResult ? 20 : 0
           newStats.gold = newStats.gold + earn
           if (checkResult) newStats.commerce = Math.min(20, newStats.commerce + 1)
+        }
+        if (actionId === 'act_smuggle_negotiate') {
+          const earn = checkResult ? 50 : -10
+          newStats.gold = Math.max(0, newStats.gold + earn)
+          if (checkResult) newStats.commerce = Math.min(20, newStats.commerce + 1)
+        }
+        if (actionId === 'act_ship_divination') {
+          newStats.omen = Math.min(100, newStats.omen + (checkResult ? 12 : 5))
+        }
+        if (actionId === 'act_pirate_debate') {
+          if (checkResult) {
+            newStats.charm = Math.min(20, newStats.charm + 1)
+            newStats.fame = newStats.fame + 1
+          }
         }
 
         const resultText = checkResult
@@ -462,6 +523,11 @@ export const useGameStore = create<GameStore>()(
         const endingId = evaluateEnding(state)
         if (endingId) {
           set({ achievedEndingId: endingId, screen: 'GAME_OVER' })
+          return
+        }
+        const newAchs = checkAchievements(state)
+        if (newAchs.length > 0) {
+          set((s) => ({ unlockedAchievementIds: [...s.unlockedAchievementIds, ...newAchs] }))
         }
       },
 
@@ -535,6 +601,10 @@ export const useGameStore = create<GameStore>()(
 
       // ── dismissDuel ────────────────────────────────────────────────────
       dismissDuel: () => set({ activeDuel: null }),
+
+      // ── openNpcModal / closeNpcModal ───────────────────────────────────
+      openNpcModal: (npcId) => set({ activeNpcId: npcId }),
+      closeNpcModal: () => set({ activeNpcId: null }),
 
       // ── performDuelAction ──────────────────────────────────────────────
       performDuelAction: (action) => {
@@ -653,8 +723,15 @@ export const useGameStore = create<GameStore>()(
           return
         }
 
+        // Check achievements
+        const newAchs = checkAchievements(newState)
+        if (newAchs.length > 0) {
+          set((s) => ({ unlockedAchievementIds: [...s.unlockedAchievementIds, ...newAchs] }))
+        }
+
         // Try to trigger an event
-        const event = pickTriggeredEvent(newState)
+        const postState = get()
+        const event = pickTriggeredEvent(postState)
         if (event) {
           const seenFlag = `event_seen_${event.id}`
           set((s) => ({

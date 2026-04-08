@@ -609,4 +609,670 @@ export const EVENTS: GameEvent[] = [
       },
     ],
   },
+
+  // ═══════════════════════════════════════════════════════
+  // Category G: NPC Deepening Events (12)
+  // ═══════════════════════════════════════════════════════
+
+  // ── 千代（巫女）── relations 10
+  {
+    id: 'event_chiyo_confide_1',
+    type: 'social',
+    title: '千代の悩み',
+    body: '千代が修行の合間にあなたに打ち明けた。「神の声が聞こえるはずなのに、最近何も聞こえないの」',
+    trigger: { locationId: 'loc_shrine', relations: { priestess: 10 } },
+    choices: [
+      {
+        label: '一緒に悩みを探る（共感）',
+        check: 'wisdom',
+        threshold: 9,
+        successOutcome: {
+          text: '丁寧に話を聞いた。千代は少し楽になったようだ。',
+          relationChanges: { priestess: 5 },
+          statChanges: { omen: 5 },
+        },
+        failOutcome: {
+          text: '何も言えなかった。千代は一人で境内へ去った。',
+          relationChanges: { priestess: 1 },
+        },
+      },
+      {
+        label: '神社の外でも修行はできる（励ます）',
+        successOutcome: {
+          text: '前向きな言葉に千代の目が輝いた。',
+          relationChanges: { priestess: 3 },
+        },
+      },
+    ],
+  },
+
+  // ── 千代（巫女）── relations 20
+  {
+    id: 'event_chiyo_confide_2',
+    type: 'social',
+    title: '千代の家族の秘密',
+    body: '深夜の参道で千代が囁いた。「実は……私の母は陰陽師だった。家族には秘密にしてきたけど、あなたになら話せる」',
+    trigger: { locationId: 'loc_shrine', relations: { priestess: 20 } },
+    choices: [
+      {
+        label: '秘密を共に守る',
+        successOutcome: {
+          text: '千代との絆が深まった。ふたりだけの秘密が生まれた。',
+          relationChanges: { priestess: 8 },
+          flagsSet: ['flag_chiyo_secret_shared'],
+        },
+      },
+      {
+        label: '陰陽師の血は誇りだと伝える',
+        check: 'charm',
+        threshold: 10,
+        successOutcome: {
+          text: '千代は初めて笑った——母のことを誇りに思えると言って。',
+          relationChanges: { priestess: 6 },
+          statChanges: { omen: 8 },
+        },
+        failOutcome: {
+          text: 'うまく伝わらなかったが、千代は少しだけ表情を緩めた。',
+          relationChanges: { priestess: 2 },
+        },
+      },
+    ],
+  },
+
+  // ── 千代（巫女）── relations 30
+  {
+    id: 'event_chiyo_school',
+    type: 'fate',
+    title: '共に流派を',
+    body: '千代が真剣な目であなたを見た。「一緒に新しい流派を開きませんか。天命と神職の力を合わせれば、きっと誰も見たことのない道が……」',
+    trigger: { locationId: 'loc_shrine', relations: { priestess: 30 }, flags: ['flag_chiyo_secret_shared'] },
+    choices: [
+      {
+        label: '一緒に流派を開く（大きな決断）',
+        successOutcome: {
+          text: '千代と共に流派を開く誓いを立てた。新たな天命の扉が開いた。',
+          flagsSet: ['flag_school_with_chiyo', 'flag_school_selected'],
+          relationChanges: { priestess: 10 },
+          statChanges: { fame: 5, omen: 10 },
+        },
+      },
+      {
+        label: 'まだ時が来ていない',
+        successOutcome: {
+          text: '千代は少し寂しそうだったが、理解してくれた。',
+          relationChanges: { priestess: -2 },
+        },
+      },
+    ],
+  },
+
+  // ── 直家（藩主）── relations 10
+  {
+    id: 'event_lord_confide_1',
+    type: 'social',
+    title: '直家の迷い',
+    body: '直家が月見の縁側で独り言のように語った。「小藩主など、どこへでも替えが利く……それでも守りたいものがある」',
+    trigger: { locationId: 'loc_castle', relations: { lord: 10 } },
+    choices: [
+      {
+        label: '守るものを尋ねる',
+        check: 'charm',
+        threshold: 9,
+        successOutcome: {
+          text: '直家が珍しく心を開いた。信頼が積み重なった。',
+          relationChanges: { lord: 5 },
+          statChanges: { fame: 2 },
+        },
+        failOutcome: {
+          text: '直家は苦笑いして話題を変えた。',
+          relationChanges: { lord: 1 },
+        },
+      },
+      {
+        label: '天命を読んで助言する',
+        check: 'omen',
+        threshold: 10,
+        successOutcome: {
+          text: '天命の言葉が直家の心に刺さった。彼の迷いが少し晴れた。',
+          relationChanges: { lord: 6 },
+          statChanges: { omen: -5, fame: 1 },
+        },
+        failOutcome: {
+          text: '卦が曖昧だった。直家は礼を言い、部屋へ戻った。',
+          relationChanges: { lord: 0 },
+        },
+      },
+    ],
+  },
+
+  // ── 直家（藩主）── relations 20
+  {
+    id: 'event_lord_confide_2',
+    type: 'career',
+    title: '政争の秘密',
+    body: '直家が内密に耳打ちした。「隣の領主が我が藩の内通者を買収しようとしている。お前には話しておく」',
+    trigger: { locationId: 'loc_castle', relations: { lord: 20 } },
+    choices: [
+      {
+        label: '内通者を探す（智略）',
+        check: 'wisdom',
+        threshold: 11,
+        successOutcome: {
+          text: '内通者の尻尾をつかんだ。直家への忠誠が認められた。',
+          relationChanges: { lord: 8 },
+          flagsSet: ['flag_spy_caught'],
+          statChanges: { fame: 3 },
+        },
+        failOutcome: {
+          text: '手がかりをつかめなかった。直家は落胆した様子だった。',
+          relationChanges: { lord: -2 },
+        },
+      },
+      {
+        label: '知らないふりをする',
+        successOutcome: {
+          text: '距離を置いた。直家は少し失望した目を向けた。',
+          relationChanges: { lord: -3 },
+        },
+      },
+    ],
+  },
+
+  // ── 直家（藩主）── relations 30
+  {
+    id: 'event_lord_conspiracy',
+    type: 'fate',
+    title: '謀反の計画',
+    body: '直家が震える声で囁いた。「……隣国の侵攻が近い。私は先手を打つつもりだ。お前にしか話せない」',
+    trigger: { locationId: 'loc_castle', relations: { lord: 30 }, flags: ['flag_spy_caught'] },
+    choices: [
+      {
+        label: '共に謀を担う（忠誠路線）',
+        successOutcome: {
+          text: '直家の計画を支持した。これであなたは彼の腹心となった。',
+          flagsSet: ['flag_lord_conspiracy', 'flag_merit_ending_open'],
+          relationChanges: { lord: 12 },
+          statChanges: { fame: 5 },
+        },
+      },
+      {
+        label: '離れる（中立路線）',
+        successOutcome: {
+          text: 'あなたは深入りしないことにした。直家の目に複雑な色が浮かんだ。',
+          relationChanges: { lord: -5 },
+        },
+      },
+    ],
+  },
+
+  // ── 早坂（商人）── relations 10
+  {
+    id: 'event_merchant_past',
+    type: 'social',
+    title: '早坂の失敗談',
+    body: '早坂が苦笑いで話し始めた。「若い頃、大きな商売に失敗してな……全財産を失った。それでも立ち直れたのは……」',
+    trigger: { locationId: 'loc_market', relations: { merchant: 10 } },
+    choices: [
+      {
+        label: '続きを聞く',
+        successOutcome: {
+          text: '早坂の話に引き込まれた。商才の真髄を少し学んだ気がした。',
+          relationChanges: { merchant: 5 },
+          statChanges: { commerce: 1 },
+        },
+      },
+      {
+        label: '立ち直れた理由を尋ねる',
+        check: 'charm',
+        threshold: 8,
+        successOutcome: {
+          text: '早坂が笑って肩を叩いた。「そういうやつが好きだ」',
+          relationChanges: { merchant: 7 },
+        },
+        failOutcome: {
+          text: '早坂は少し口をつぐんだ。「……また今度な」',
+          relationChanges: { merchant: 2 },
+        },
+      },
+    ],
+  },
+
+  // ── 早坂（商人）── relations 20
+  {
+    id: 'event_merchant_scandal',
+    type: 'social',
+    title: '偽商品のスキャンダル',
+    body: '早坂が顔を赤くして打ち明けた。「実は……以前、粗悪品を高値で売ったことがある。今でも夢に出る」',
+    trigger: { locationId: 'loc_market', relations: { merchant: 20 } },
+    choices: [
+      {
+        label: '過去は過去だと励ます',
+        successOutcome: {
+          text: '早坂の顔が少し明るくなった。信頼がより深まった。',
+          relationChanges: { merchant: 6 },
+          flagsSet: ['flag_merchant_trusted'],
+        },
+      },
+      {
+        label: '正直に謝罪する方がいいと伝える',
+        check: 'wisdom',
+        threshold: 10,
+        successOutcome: {
+          text: '早坂は深くうなずいた。「そうだな……お前は本物だ」',
+          relationChanges: { merchant: 8 },
+          statChanges: { fame: 2 },
+        },
+        failOutcome: {
+          text: 'うまく伝わらなかった。早坂は曖昧に笑った。',
+          relationChanges: { merchant: 2 },
+        },
+      },
+    ],
+  },
+
+  // ── 早坂（商人）── relations 30
+  {
+    id: 'event_merchant_smuggle_invite',
+    type: 'social',
+    title: '港の密輸ルート',
+    body: '早坂が声を潜めた。「霧岬港に俺の秘密のルートがある。お前なら信用できる……一緒にやらないか？」',
+    trigger: { locationId: 'loc_market', relations: { merchant: 30 }, flags: ['flag_merchant_trusted'] },
+    choices: [
+      {
+        label: '誘いに乗る（商人路線）',
+        successOutcome: {
+          text: '港の密輸ルートに加わった。大きな商機と危険の両方が近づいた。',
+          flagsSet: ['flag_smuggle_route', 'flag_war_intel'],
+          relationChanges: { merchant: 10 },
+          statChanges: { gold: 50 },
+        },
+      },
+      {
+        label: '断る（安全路線）',
+        successOutcome: {
+          text: '早坂は少し残念そうだったが、理解してくれた。',
+          relationChanges: { merchant: -2 },
+        },
+      },
+    ],
+  },
+
+  // ── 朧（ライバル）── relations 10 (affection starts negative, so track absolute)
+  {
+    id: 'event_rival_rematch',
+    type: 'personal',
+    title: '朧の再挑戦',
+    body: '道場で朧が腕を組みながら言った。「……もう一度、稽古をつけてもらえるか。前回は不甲斐なかった」',
+    trigger: { locationId: 'loc_dojo', relations: { rival: 5 } },
+    choices: [
+      {
+        label: '喜んで応じる',
+        check: 'martial',
+        threshold: 9,
+        successOutcome: {
+          text: '激しい稽古の後、朧が素直に礼を言った。関係が変わった。',
+          relationChanges: { rival: 8 },
+          statChanges: { martial: 1 },
+        },
+        failOutcome: {
+          text: 'あなたが負けた。朧は少し驚いた顔をして去った。',
+          relationChanges: { rival: 3 },
+          statChanges: { martial: 0 },
+        },
+      },
+      {
+        label: '断る',
+        successOutcome: {
+          text: '朧は黙って去った。',
+          relationChanges: { rival: -2 },
+        },
+      },
+    ],
+  },
+
+  // ── 朧（ライバル）── relations 15
+  {
+    id: 'event_rival_acknowledge',
+    type: 'personal',
+    title: '朧の本音',
+    body: '朧が夕暮れの道場でぽつりと言った。「……お前は強い。俺が認めたくなかったのは、嫉妬だったかもしれない」',
+    trigger: { locationId: 'loc_dojo', relations: { rival: 15 } },
+    choices: [
+      {
+        label: 'お互い様だと言う',
+        successOutcome: {
+          text: '朧が初めて笑った——ぎこちない笑いだったが、確かに笑った。',
+          relationChanges: { rival: 8 },
+          flagsSet: ['flag_rival_respected'],
+        },
+      },
+      {
+        label: '黙って頷く',
+        successOutcome: {
+          text: '言葉はいらなかった。互いに分かっていた。',
+          relationChanges: { rival: 5 },
+        },
+      },
+    ],
+  },
+
+  // ── 朧（ライバル）── relations 25
+  {
+    id: 'event_rival_partner',
+    type: 'fate',
+    title: '共に修行しよう',
+    body: '朧が真剣な目で言った。「……一緒に修行しないか。お前と俺が組めば、もっと高みに行ける気がする」',
+    trigger: { locationId: 'loc_dojo', relations: { rival: 25 }, flags: ['flag_rival_respected'] },
+    choices: [
+      {
+        label: '共に修行する（準仲間化）',
+        successOutcome: {
+          text: 'ライバルが仲間になった。道場に新しい風が吹いた。',
+          flagsSet: ['flag_rival_ally'],
+          relationChanges: { rival: 10 },
+          statChanges: { martial: 2, fame: 2 },
+        },
+      },
+      {
+        label: '独りの道を選ぶ',
+        successOutcome: {
+          text: '朧は少し寂しそうだったが、頷いた。',
+          relationChanges: { rival: -3 },
+        },
+      },
+    ],
+  },
+
+  // ── 港NPCイベント ──
+  {
+    id: 'event_smuggler_offer',
+    type: 'social',
+    title: '浜田の密かな取引',
+    body: '浜田宗右衛門が目を細めた。「珍しい荷が入ってきた。表には出せないが……腕のいい商人なら分かるだろう？」',
+    trigger: { locationId: 'loc_port' },
+    choices: [
+      {
+        label: '興味を示す（商才）',
+        check: 'commerce',
+        threshold: 10,
+        successOutcome: {
+          text: '取引成立。かなりの利益を得た。浜田との信頼も深まった。',
+          relationChanges: { sea_merchant: 8 },
+          statChanges: { gold: 60, commerce: 1 },
+        },
+        failOutcome: {
+          text: '交渉が決裂した。浜田が苦い顔をした。',
+          relationChanges: { sea_merchant: -3 },
+          statChanges: { gold: -10 },
+        },
+      },
+      {
+        label: '断る',
+        successOutcome: {
+          text: '浜田は肩をすくめた。「真面目だね、あんたは」',
+          relationChanges: { sea_merchant: 2 },
+        },
+      },
+    ],
+  },
+
+  {
+    id: 'event_merchant_past_failure',
+    type: 'social',
+    title: '浜田の過去',
+    body: '浜田が夕暮れに語り始めた。「若い頃、商売に失敗して借金まみれになった。港が俺を救ってくれた……」',
+    trigger: { locationId: 'loc_port', relations: { sea_merchant: 10 } },
+    choices: [
+      {
+        label: '話の続きを聞く',
+        successOutcome: {
+          text: '浜田の商才の源を知った。商才が上がった。',
+          relationChanges: { sea_merchant: 5 },
+          statChanges: { commerce: 2 },
+        },
+      },
+    ],
+  },
+
+  {
+    id: 'event_smuggle_route_invite',
+    type: 'social',
+    title: '密輸ルートへの誘い',
+    body: '浜田が声を潜めた。「本当に信用できる奴だけに教える話がある……港の抜け道だ」',
+    trigger: { locationId: 'loc_port', relations: { sea_merchant: 20 } },
+    choices: [
+      {
+        label: 'ルートに加わる',
+        successOutcome: {
+          text: '秘密のルートを知った。大きなビジネスが動き出した。',
+          flagsSet: ['flag_smuggle_route', 'flag_secret_route'],
+          relationChanges: { sea_merchant: 10 },
+          statChanges: { gold: 80 },
+        },
+      },
+      {
+        label: '断る',
+        successOutcome: {
+          text: '浜田はため息をついた。',
+          relationChanges: { sea_merchant: -2 },
+        },
+      },
+    ],
+  },
+
+  {
+    id: 'event_traveler_gift',
+    type: 'rare',
+    title: '異国人の贈り物',
+    body: 'ルカスが革の袋を差し出した。「あの嵐の夜、助けてもらった恩返しだ。故郷から持ってきた星見の書だ」',
+    trigger: { locationId: 'loc_port', flags: ['flag_storm_helped'] },
+    choices: [
+      {
+        label: '礼を言って受け取る',
+        successOutcome: {
+          text: '「星見の書」を手に入れた。知識と天命が広がった。',
+          statChanges: { wisdom: 2, omen: 10 },
+          flagsSet: ['flag_item_star_grimoire'],
+        },
+      },
+    ],
+  },
+
+  {
+    id: 'event_guard_warning',
+    type: 'social',
+    title: '鉄次の警告',
+    body: '港の用心棒・鉄次が低い声で言った。「お前のことは悪く思ってない。だが……深入りするな。港には見えない力がある」',
+    trigger: { locationId: 'loc_port' },
+    choices: [
+      {
+        label: '警告を受け入れる',
+        successOutcome: {
+          text: '鉄次を信頼することにした。',
+          relationChanges: { port_guard: 5 },
+          flagsSet: ['flag_port_warned'],
+        },
+      },
+      {
+        label: '気にせず突き進む',
+        successOutcome: {
+          text: '鉄次は何も言わず肩をすくめた。',
+          relationChanges: { port_guard: -2 },
+        },
+      },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════
+  // Category H: Rare Events (5)
+  // ═══════════════════════════════════════════════════════
+
+  {
+    id: 'event_moonlit_visitor',
+    type: 'rare',
+    title: '🌕 満月の夜の来訪者',
+    body: '満月の夜、神社の境内に見知らぬ老人が立っていた。「この月夜を読める者を探しておった……お主は面白い」',
+    trigger: {
+      locationId: 'loc_shrine',
+      minTurn: 12,
+      probability: 0.06,
+    },
+    choices: [
+      {
+        label: '老人の話を聞く',
+        successOutcome: {
+          text: '老人は懐から天狗の羽根扇を取り出し、あなたに渡した。姿が消えた。',
+          statChanges: { omen: 15 },
+          flagsSet: ['flag_item_tengu_fan', 'flag_moonlit_visitor_met'],
+        },
+      },
+      {
+        label: '怪しんで追い払う',
+        successOutcome: {
+          text: '老人は静かに笑い、霧の中に消えた。何かを失った気がした。',
+          statChanges: { omen: -5 },
+        },
+      },
+    ],
+  },
+
+  {
+    id: 'event_castle_fire',
+    type: 'rare',
+    title: '🔥 城下の火事',
+    body: '突然、城下から黒煙が上がった。火の手が広がり、住民たちが逃げ惑っている。',
+    trigger: {
+      minStat: { omen: 0 },
+      probability: 0.05,
+    },
+    choices: [
+      {
+        label: '救助に向かう（英雄的行為）',
+        check: 'martial',
+        threshold: 9,
+        successOutcome: {
+          text: '命がけで人々を助けた。城下中に名が轟いた。',
+          statChanges: { fame: 15, stamina: -20 },
+          flagsSet: ['flag_fire_hero'],
+        },
+        failOutcome: {
+          text: '助けようとしたが力及ばず、自身も傷を負った。',
+          statChanges: { stamina: -30, fame: 3 },
+        },
+      },
+      {
+        label: '安全な場所へ避難する',
+        successOutcome: {
+          text: '自分の身を守った。しかし保身の評判が立った。',
+          flagsSet: ['flag_coward'],
+          statChanges: { fame: -3 },
+        },
+      },
+    ],
+  },
+
+  {
+    id: 'event_assassin_blade',
+    type: 'rare',
+    title: '⚔️ 暗殺者の刃',
+    body: '夜道で覆面の男に囲まれた。「直家の腹心め……消えてもらう」',
+    trigger: {
+      minFame: 20,
+      flags: ['flag_lord_conspiracy'],
+      probability: 0.08,
+    },
+    choices: [
+      {
+        label: '迎え撃つ（武藝）',
+        check: 'martial',
+        threshold: 12,
+        successOutcome: {
+          text: '刺客を退けた。直家への忠誠が証明された。',
+          flagsSet: ['flag_loyalty_proven'],
+          statChanges: { fame: 5, martial: 1 },
+        },
+        failOutcome: {
+          text: '傷を負いながらも逃げ延びた。しかし恐怖が残った。',
+          statChanges: { stamina: -30, fame: -2 },
+        },
+      },
+      {
+        label: '逃げる',
+        successOutcome: {
+          text: '命からがら逃げた。直家の前に立てる顔がない。',
+          flagsSet: ['flag_path_escaped'],
+          statChanges: { fame: -5 },
+        },
+      },
+    ],
+  },
+
+  {
+    id: 'event_storm_shipwreck',
+    type: 'rare',
+    title: '🌊 嵐と難破船',
+    body: '霧岬港に猛烈な嵐が来た。沖に難破した船が見える。乗客の叫び声が聞こえてくる。',
+    trigger: {
+      locationId: 'loc_port',
+      probability: 0.07,
+    },
+    choices: [
+      {
+        label: '助けに行く',
+        check: 'martial',
+        threshold: 10,
+        successOutcome: {
+          text: '荒波を越えて乗客を救出した。異国人の命を救った。',
+          flagsSet: ['flag_storm_helped'],
+          statChanges: { fame: 8, stamina: -25 },
+          relationChanges: { foreign_traveler: 20 },
+        },
+        failOutcome: {
+          text: '波に飲まれそうになりながらも辛うじて岸に戻った。',
+          statChanges: { stamina: -30 },
+        },
+      },
+      {
+        label: '見届けるだけ',
+        successOutcome: {
+          text: '何もできなかった。嵐が去り、浜に流れ着いた荷物を見た。',
+          statChanges: { omen: -5 },
+        },
+      },
+    ],
+  },
+
+  {
+    id: 'event_twin_fate',
+    type: 'rare',
+    title: '🌑 双子の天命',
+    body: '深夜の占いの最中、卦に見たことのないパターンが現れた。二つの命運が重なっている——双子の天命だ。',
+    trigger: {
+      minStat: { omen: 60 },
+      probability: 0.04,
+    },
+    choices: [
+      {
+        label: '占いを続ける',
+        check: 'omen',
+        threshold: 14,
+        successOutcome: {
+          text: 'ふたつの天命が見えた。隠された存在がこの世に現れる予感がした。',
+          flagsSet: ['flag_twin_fate_read', 'flag_hidden_npc_unlock'],
+          statChanges: { omen: 10 },
+        },
+        failOutcome: {
+          text: '卦が崩れた。天命の力が一時的に乱れた。',
+          statChanges: { omen: -15 },
+        },
+      },
+      {
+        label: '占いを止める',
+        successOutcome: {
+          text: '直感に従って止めた。何かが静かに過ぎ去った気がした。',
+        },
+      },
+    ],
+  },
 ]
+

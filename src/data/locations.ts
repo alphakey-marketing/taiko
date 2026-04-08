@@ -167,4 +167,39 @@ export const LOCATIONS: Location[] = [
       },
     ],
   },
+  {
+    id: 'loc_port',
+    name: '霧岬港',
+    description: '霧に包まれた港町。海商・密輸人・異国の旅人が集まる。商才ルートの起点。',
+    requiredFame: 10,
+    unlockFlags: ['flag_war_intel'],
+    npcIds: ['sea_merchant', 'port_guard', 'foreign_traveler'],
+    actions: [
+      {
+        id: 'act_smuggle_negotiate',
+        label: '密輸交渉をする',
+        description: '海商と秘密の取引を交渉する。商才が試される。',
+        staminaCost: 15,
+        daysCost: 1,
+        checks: ['commerce', 'charm'],
+      },
+      {
+        id: 'act_ship_divination',
+        label: '船上で占いを行う',
+        description: '波の上で卦を立てる。天命が高いほど正確な啓示が得られる。',
+        staminaCost: 10,
+        daysCost: 1,
+        checks: ['omen', 'wisdom'],
+      },
+      {
+        id: 'act_pirate_debate',
+        label: '海賊と舌戦する',
+        description: '荒くれ海賊を言葉の力で丸め込む。魅力が問われる。',
+        staminaCost: 15,
+        daysCost: 1,
+        checks: ['charm'],
+      },
+    ],
+  },
 ]
+

@@ -1,0 +1,23 @@
+.hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  background: rgba(20, 35, 15, 0.85);
+  border: 1px solid #3a5a20;
+  border-left: 3px solid #6aaa40;
+  border-radius: 3px;
+  padding: 0.5rem 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.icon {
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  line-height: 1.5;
+}
+
+.text {
+  font-size: 0.8rem;
+  color: #a0cc80;
+  line-height: 1.5;
+}

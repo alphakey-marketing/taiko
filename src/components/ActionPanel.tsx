@@ -1,5 +1,6 @@
-import { useGameStore, getLocation, getAvailableQuestsAt, getQuest } from '../store/gameStore'
+import { useGameStore, getLocation, getAvailableQuestsAt, getQuest, getNpc } from '../store/gameStore'
 import { playClick, playTurnEnd, playSuccess } from '../utils/sound'
+import { TutorialHint } from './TutorialHint'
 import styles from './ActionPanel.module.css'
 
 export function ActionPanel() {
@@ -14,6 +15,7 @@ export function ActionPanel() {
     acceptQuest,
     completeQuest,
     endTurn,
+    openNpcModal,
   } = useGameStore()
 
   const loc = getLocation(player.currentLocationId)

@@ -14,16 +14,17 @@ const STAT_JP: Record<string, string> = {
   omen: '天命',
 }
 
-const bg = BACKGROUNDS[0]
-
 export function CharacterCreation() {
   const [name, setName] = useState('')
-  const { startNewGame } = useGameStore()
+  const [selectedBgId, setSelectedBgId] = useState(BACKGROUNDS[0].id)
+  const { startNewGame, newGamePlusBonusId } = useGameStore()
+
+  const selectedBg = BACKGROUNDS.find((b) => b.id === selectedBgId) ?? BACKGROUNDS[0]
 
   const handleStart = () => {
     const trimmed = name.trim()
     if (!trimmed) return
-    startNewGame(trimmed, bg.id)
+    startNewGame(trimmed, selectedBgId)
   }
 
   return (
@@ -33,19 +34,44 @@ export function CharacterCreation() {
         <p className={styles.subtitle}>Onmyoji Rising</p>
         <div className={styles.divider} />
 
-        <h2 className={styles.sectionLabel}>── 陰陽師見習として立志せよ ──</h2>
+        {newGamePlusBonusId && (
+          <div className={styles.ngPlusBanner}>
+            🔁 前回の立志伝の記憶を持って再び立志する
+          </div>
+        )}
 
-        {/* Origin card */}
+        <h2 className={styles.sectionLabel}>── 出自を選べ ──</h2>
+
+        {/* Background selection tabs */}
+        <div className={styles.bgTabs}>
+          {BACKGROUNDS.map((bg) => (
+            <button
+              key={bg.id}
+              className={`${styles.bgTab} ${bg.id === selectedBgId ? styles.bgTabActive : ''}`}
+              onClick={() => setSelectedBgId(bg.id)}
+            >
+              {bg.name}
+            </button>
+          ))}
+        </div>
+
+        {/* Selected background card */}
         <div className={styles.bgDetail}>
-          <span className={styles.bgDetailTitle}>{bg.name}</span>
-          <p className={styles.bgDetailDesc}>{bg.description}</p>
+          <span className={styles.bgDetailTitle}>{selectedBg.name}</span>
+          <p className={styles.bgDetailDesc}>{selectedBg.description}</p>
           <div className={styles.bgBonuses}>
-            {Object.entries(bg.statBonuses).map(([stat, val]) => (
-              <span key={stat} className={styles.bonus}>
-                {STAT_JP[stat]} +{val}
+            {Object.entries(selectedBg.statBonuses).map(([stat, val]) => (
+              <span
+                key={stat}
+                className={`${styles.bonus} ${(val as number) < 0 ? styles.bonusMinus : ''}`}
+              >
+                {STAT_JP[stat]} {(val as number) >= 0 ? '+' : ''}{val}
               </span>
             ))}
-            <span className={styles.bonus}>初期金：{bg.startingGold}貫</span>
+            <span className={styles.bonus}>初期金：{selectedBg.startingGold}貫</span>
+            {selectedBg.startingFame > 0 && (
+              <span className={styles.bonus}>初期名声：{selectedBg.startingFame}</span>
+            )}
           </div>
         </div>
 
@@ -77,3 +103,4 @@ export function CharacterCreation() {
     </div>
   )
 }
+

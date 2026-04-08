@@ -144,6 +144,58 @@
   color: #a0c870;
 }
 
+.bonus.bonusMinus {
+  color: #e08080;
+  background: #2a0808;
+  border-color: #5a1a1a;
+}
+
+.bgTabs {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.bgTab {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  background: #1a0f05;
+  border: 1px solid #3a2a10;
+  border-radius: 3px;
+  color: #9a8060;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.bgTab:hover {
+  border-color: #8b5a2a;
+  color: #d4b896;
+}
+
+.bgTab.bgTabActive {
+  border-color: #c23b3b;
+  background: #2a1208;
+  color: #e8c87a;
+  font-weight: 600;
+}
+
+.ngPlusBanner {
+  width: 100%;
+  background: #1a2a10;
+  border: 1px solid #3a6a20;
+  border-radius: 3px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  color: #90d068;
+  text-align: center;
+  letter-spacing: 0.05em;
+  box-sizing: border-box;
+}
+
 .bgDetail {
   background: #1a0f05;
   border: 1px solid #3a2a10;

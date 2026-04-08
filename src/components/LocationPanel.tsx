@@ -13,7 +13,9 @@ export function LocationPanel() {
       <div className={styles.grid}>
         {LOCATIONS.map((loc) => {
           const isActive = loc.id === player.currentLocationId
-          const locked = loc.requiredFame > player.stats.fame
+          const fameLocked = loc.requiredFame > player.stats.fame
+          const flagUnlocked = loc.unlockFlags?.some((f) => player.flags.includes(f)) ?? false
+          const locked = fameLocked && !flagUnlocked
 
           return (
             <button
