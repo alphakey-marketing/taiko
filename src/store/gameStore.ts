@@ -262,6 +262,7 @@ export const useGameStore = create<GameStore>()(
 
         // Set background-specific starting flags
         const startFlags: string[] = []
+        if (bg.id === 'onmyoji_apprentice') startFlags.push('flag_bg_onmyoji')
         if (bg.id === 'samurai_apprentice') startFlags.push('flag_bg_samurai')
         if (bg.id === 'fallen_merchant') startFlags.push('flag_bg_merchant')
 

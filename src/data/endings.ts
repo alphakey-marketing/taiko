@@ -62,10 +62,10 @@ export const ENDINGS: Ending[] = [
     title: '刀客一道',
     subtitle: '剣に生きた孤高の剣士',
     description:
-      '武士見習いとして生まれ、剣の道を極めた者がいた。あなたの太刀筋は師をも超え、「一道の剣聖」と呼ばれるようになった。政には関わらず、ただ剣と向き合い、静かに老いていった。',
+      '武士見習いとして生まれ、剣の道を極めた者がいた。巡礼を終えたあなたの太刀筋は師をも超え、「一道の剣聖」と呼ばれるようになった。政には関わらず、ただ剣と向き合い、静かに老いていった。',
     condition: {
-      minStat: { martial: 18 },
-      flags: ['flag_bg_samurai'],
+      minStat: { martial: 15 },
+      flags: ['flag_bg_samurai', 'flag_sword_pilgrim_done'],
       priority: 11,
     },
   },
@@ -74,11 +74,11 @@ export const ENDINGS: Ending[] = [
     title: '財閥の礎',
     subtitle: '霧岬商会の創始者',
     description:
-      '没落商家から身を起こし、霧岬港を拠点に一大商会を築いた。貿易・密輸・情報網——あなたの手が届かぬ場所はなくなった。財は力。あなたは次の世代のための礎を置いた。',
+      '没落商家から身を起こし、組合の看板を背負い、霧岬港を拠点に一大商会を築いた。貿易・密輸・情報網——あなたの手が届かぬ場所はなくなった。財は力。あなたは次の世代のための礎を置いた。',
     condition: {
       minGold: 500,
       relations: { merchant: 30 },
-      flags: ['flag_bg_merchant'],
+      flags: ['flag_bg_merchant', 'flag_guild_member'],
       priority: 11,
     },
   },

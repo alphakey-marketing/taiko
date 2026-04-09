@@ -265,4 +265,189 @@ export const QUESTS: Quest[] = [
     },
     failConsequences: {},
   },
+
+  // ═══════════════════════════════════════════════════════
+  // Samurai Path Quests (flag_bg_samurai required)
+  // ═══════════════════════════════════════════════════════
+
+  // ─── QS1. 武士の誓い ─────────────────────────────────────────────────────
+  {
+    id: 'quest_sword_vow',
+    title: '武士の誓い',
+    description: '師父・片桐宗真の前に立ち、剣の道への誓いを立てる。武士見習いとしての第一歩だ。',
+    locationId: 'loc_dojo',
+    requirements: { flags: ['flag_bg_samurai'] },
+    cost: { days: 1, stamina: 15 },
+    checks: ['martial'],
+    threshold: 7,
+    rewards: {
+      stats: { martial: 1 },
+      relations: { mentor: 8 },
+      flags: ['flag_sword_vow'],
+    },
+    failConsequences: {
+      stats: { stamina: -10 },
+    },
+  },
+
+  // ─── QS2. 城門の警護 ─────────────────────────────────────────────────────
+  {
+    id: 'quest_castle_guard',
+    title: '城門の警護',
+    description: '直家の城門を一晩守る任務。武士の基本——忠実に、静かに、強く。',
+    locationId: 'loc_castle',
+    requirements: { flags: ['flag_bg_samurai'], fame: 2 },
+    cost: { days: 2, stamina: 25 },
+    checks: ['martial', 'charm'],
+    threshold: 9,
+    rewards: {
+      gold: 40,
+      fame: 5,
+      relations: { retainer: 6, lord: 4 },
+      flags: ['flag_guard_done'],
+    },
+    failConsequences: {
+      fame: -2,
+      stats: { stamina: -15 },
+    },
+  },
+
+  // ─── QS3. 朧との決着 ─────────────────────────────────────────────────────
+  {
+    id: 'quest_rival_rematch',
+    title: '朧との決着',
+    description: '浪人・朧雨之介が再び挑んできた。「前回は手加減した。今度は本気だ」。これが真の決着だ。',
+    locationId: 'loc_dojo',
+    requirements: { flags: ['flag_bg_samurai', 'flag_rival_respected'] },
+    cost: { days: 1, stamina: 40 },
+    checks: ['martial'],
+    threshold: 11,
+    duelConfig: {
+      enemyName: '朧 雨之介（本気）',
+      enemyHp: 40,
+      enemyMartial: 12,
+      rounds: 5,
+    },
+    rewards: {
+      stats: { martial: 2 },
+      fame: 8,
+      relations: { rival: 10 },
+      flags: ['flag_rival_ally', 'flag_rival_bond'],
+    },
+    failConsequences: {
+      stats: { stamina: -25 },
+      relations: { rival: 2 },
+    },
+  },
+
+  // ─── QS4. 剣の巡礼 ───────────────────────────────────────────────────────
+  {
+    id: 'quest_sword_pilgrimage',
+    title: '剣の巡礼',
+    description: '宗真が課した最後の試練——城下を離れ、山に入り、三日間ひとりで剣と向き合え。これを越えた者だけが「一道の剣士」と呼ばれる。',
+    locationId: 'loc_dojo',
+    requirements: { flags: ['flag_bg_samurai', 'flag_rival_ally'], stats: { martial: 12 } },
+    cost: { days: 3, stamina: 40 },
+    checks: ['martial'],
+    threshold: 12,
+    rewards: {
+      stats: { martial: 3 },
+      fame: 10,
+      relations: { mentor: 8 },
+      flags: ['flag_sword_pilgrim_done'],
+    },
+    failConsequences: {
+      stats: { stamina: -30 },
+      fame: -2,
+    },
+  },
+
+  // ═══════════════════════════════════════════════════════
+  // Merchant Path Quests (flag_bg_merchant required)
+  // ═══════════════════════════════════════════════════════
+
+  // ─── QM1. 家の借金返済 ───────────────────────────────────────────────────
+  {
+    id: 'quest_repay_family_debt',
+    title: '家の借金返済',
+    description: '没落した家に残る借金を清算する。彌兵衛の仲介を借りて、正面から解決しよう。商人として最初の大きな節目だ。',
+    locationId: 'loc_market',
+    requirements: { flags: ['flag_bg_merchant'] },
+    cost: { days: 2, stamina: 10, gold: 60 },
+    checks: ['commerce', 'charm'],
+    threshold: 8,
+    rewards: {
+      fame: 4,
+      relations: { merchant: 8 },
+      flags: ['flag_debt_cleared'],
+    },
+    failConsequences: {
+      fame: -2,
+      relations: { merchant: -3 },
+    },
+  },
+
+  // ─── QM2. 港の供給契約 ───────────────────────────────────────────────────
+  {
+    id: 'quest_port_supply_contract',
+    title: '港の軍需供給契約',
+    description: '隣国の戦乱で城下の物資需要が急増している。浜田宗右衛門と組んで軍需品の供給契約を結び、大きな利益を得よ。',
+    locationId: 'loc_port',
+    requirements: { flags: ['flag_bg_merchant', 'flag_war_intel'] },
+    cost: { days: 3, stamina: 25 },
+    checks: ['commerce', 'charm'],
+    threshold: 10,
+    rewards: {
+      gold: 180,
+      relations: { sea_merchant: 8, merchant: 4 },
+      flags: ['flag_supply_contract'],
+    },
+    failConsequences: {
+      gold: -30,
+      relations: { sea_merchant: -4 },
+    },
+  },
+
+  // ─── QM3. 市場の一角を占める ─────────────────────────────────────────────
+  {
+    id: 'quest_market_corner',
+    title: '市場の一角を占める',
+    description: '彌兵衛の信頼を得た今、城下市場の特定品目を独占する取引を仕掛ける。大きな元手が必要だが、成功すれば商界での地位が確立する。',
+    locationId: 'loc_market',
+    requirements: { flags: ['flag_bg_merchant', 'flag_merchant_trusted'], stats: { commerce: 8 } },
+    cost: { days: 2, stamina: 20, gold: 100 },
+    checks: ['commerce'],
+    threshold: 11,
+    rewards: {
+      gold: 350,
+      relations: { merchant: 10 },
+      flags: ['flag_market_influence'],
+    },
+    failConsequences: {
+      gold: -60,
+      relations: { merchant: -5 },
+    },
+  },
+
+  // ─── QM4. 商人組合への入会 ───────────────────────────────────────────────
+  {
+    id: 'quest_guild_entry',
+    title: '商人組合への入会',
+    description: '霧岬の有力商人たちが集う組合への入会試験。財力・商才・人脈の全てが試される。組合に入れば、この城下での商人としての地位が確定する。',
+    locationId: 'loc_tavern',
+    requirements: { flags: ['flag_bg_merchant', 'flag_market_influence'], stats: { gold: 300 } },
+    cost: { days: 2, stamina: 20, gold: 50 },
+    checks: ['charm', 'commerce'],
+    threshold: 11,
+    rewards: {
+      gold: 100,
+      fame: 8,
+      relations: { merchant: 8, sea_merchant: 4 },
+      flags: ['flag_guild_member'],
+    },
+    failConsequences: {
+      fame: -3,
+      relations: { merchant: -4 },
+    },
+  },
 ]

@@ -15,6 +15,12 @@ const ENDING_STYLE: Record<string, string> = {
   ending_merit_counselor: '🏆',
   ending_independent_school: '🌸',
   ending_fallen_shadow: '🌑',
+  ending_oracle_sage: '🔮',
+  ending_sword_sage: '⚔️',
+  ending_trade_empire: '💰',
+  ending_bond_legacy: '❤️',
+  ending_school_founder: '🎓',
+  ending_shadow_king: '🕶️',
 }
 
 export function GameScreen() {
@@ -141,4 +147,14 @@ const QUEST_NAMES: Record<string, string> = {
   quest_secret_meeting: '密談の夜',
   quest_lord_exam: '直家の試問',
   quest_fate_crossroads: '命運の交差点',
+  // Samurai path
+  quest_sword_vow: '武士の誓い',
+  quest_castle_guard: '城門の警護',
+  quest_rival_rematch: '朧との決着',
+  quest_sword_pilgrimage: '剣の巡礼',
+  // Merchant path
+  quest_repay_family_debt: '家の借金返済',
+  quest_port_supply_contract: '港の軍需供給契約',
+  quest_market_corner: '市場の一角を占める',
+  quest_guild_entry: '商人組合への入会',
 }

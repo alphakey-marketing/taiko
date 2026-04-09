@@ -10,7 +10,7 @@ export const EVENTS: GameEvent[] = [
     type: 'personal',
     title: '初夜觀星',
     body: '夜空に無数の星が輝く。陰陽師として、この宇宙の流れをどう読むべきか——あなたは考え始めた。',
-    trigger: { turn: 1, locationId: 'loc_home' },
+    trigger: { turn: 1, locationId: 'loc_home', flags: ['flag_bg_onmyoji'] },
     choices: [
       {
         label: '智略の流れを読む（知を磨く）',
@@ -123,7 +123,7 @@ export const EVENTS: GameEvent[] = [
     type: 'personal',
     title: '道場の低語',
     body: '数度稽古に通っても武藝は伸びない。師父が静かに言った：「あなたの道は刀だけではないかもしれない」。',
-    trigger: { locationId: 'loc_dojo', minTurn: 5, probability: 0.5 },
+    trigger: { locationId: 'loc_dojo', minTurn: 5, probability: 0.5, flags: ['flag_bg_onmyoji'] },
     choices: [
       {
         label: '師の言葉を素直に受け取る',
@@ -1270,6 +1270,311 @@ export const EVENTS: GameEvent[] = [
         label: '占いを止める',
         successOutcome: {
           text: '直感に従って止めた。何かが静かに過ぎ去った気がした。',
+        },
+      },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════
+  // Category I: Samurai Path Events (5)
+  // ═══════════════════════════════════════════════════════
+
+  {
+    id: 'event_samurai_first_day',
+    type: 'career',
+    title: '武士としての第一歩',
+    body: '道場に通い始めた最初の夜、片桐宗真が問いかけた。「武士の道に入ったか。何のために剣を握る？」',
+    trigger: { turn: 1, flags: ['flag_bg_samurai'] },
+    choices: [
+      {
+        label: '「主君への忠義のため」',
+        successOutcome: {
+          text: '宗真は頷いた。「ならば今日から命を懸けよ」。直家への思いが固まった。',
+          statChanges: { martial: 1, fame: 1 },
+          relationChanges: { mentor: 4, lord: 4 },
+          flagsSet: ['flag_samurai_path_loyalty'],
+        },
+      },
+      {
+        label: '「己の強さを証明するため」',
+        successOutcome: {
+          text: '宗真は少し間を置いた。「自分と向き合う道か——それもよかろう」。',
+          statChanges: { martial: 1 },
+          relationChanges: { mentor: 4 },
+          flagsSet: ['flag_samurai_path_self'],
+        },
+      },
+    ],
+  },
+
+  {
+    id: 'event_mentor_philosophy',
+    type: 'social',
+    title: '師父の言葉',
+    body: '誓いを立てた後の稽古で、宗真が珍しく口を開いた。「剣客の半生は剣に捧げられる。それを知ってなお、続けるか？」',
+    trigger: { flags: ['flag_sword_vow'], locationId: 'loc_dojo', probability: 0.8 },
+    choices: [
+      {
+        label: '「覚悟の上です」と答える',
+        successOutcome: {
+          text: '宗真の目が少し和らいだ。「ならばこの技を見せてやろう」。深い技を学んだ。',
+          statChanges: { martial: 1, omen: 5 },
+          relationChanges: { mentor: 6 },
+          flagsSet: ['flag_mentor_teaching'],
+        },
+      },
+      {
+        label: '「まだ迷いがあります」と正直に言う',
+        successOutcome: {
+          text: '宗真は「正直さも武士の道だ」と言った。迷いが智略へと変わった。',
+          statChanges: { wisdom: 2 },
+          relationChanges: { mentor: 3 },
+        },
+      },
+    ],
+  },
+
+  {
+    id: 'event_war_draft',
+    type: 'world',
+    title: '徴兵の令',
+    body: '戦の気配が漂い始めた。直家が「武士の者、申し出よ」と令を出した。あなたは武士見習い——選択が迫られている。',
+    trigger: { minTurn: 10, flags: ['flag_bg_samurai'], probability: 0.7 },
+    choices: [
+      {
+        label: '志願して出陣する',
+        successOutcome: {
+          text: '直家の軍に加わった。血と汗の中で、武士としての魂が研ぎ澄まされた。',
+          statChanges: { martial: 2, stamina: -20, fame: 4 },
+          relationChanges: { lord: 5, retainer: 3 },
+          flagsSet: ['flag_samurai_war_volunteer'],
+        },
+      },
+      {
+        label: '「まだ技が未熟」と辞退する',
+        successOutcome: {
+          text: '正直な判断だ。ただし直家の視線が少し冷たくなった気がした。',
+          statChanges: { wisdom: 1 },
+          relationChanges: { lord: -4 },
+        },
+      },
+    ],
+  },
+
+  {
+    id: 'event_rival_past',
+    type: 'social',
+    title: '朧の過去',
+    body: '朧雨之介が珍しく真剣な表情で語り始めた。「俺が浪人になった理由を聞かせてやろう——お前は俺に似ているから」。',
+    trigger: { flags: ['flag_bg_samurai', 'flag_rival_respected'], locationId: 'loc_dojo', probability: 0.75 },
+    choices: [
+      {
+        label: '「聞かせてくれ」と座る',
+        successOutcome: {
+          text: '朧は主君に裏切られ浪人になった経緯を話した。その目に同志への信頼が宿った。',
+          statChanges: { wisdom: 1 },
+          relationChanges: { rival: 8 },
+          flagsSet: ['flag_rival_story_heard'],
+        },
+      },
+      {
+        label: '「過去より今を見る」と返す',
+        successOutcome: {
+          text: '朧は一瞬驚き、それから笑った。「剣客らしい返しだ」。',
+          statChanges: { charm: 1 },
+          relationChanges: { rival: 3 },
+        },
+      },
+    ],
+  },
+
+  {
+    id: 'event_samurai_path_choice',
+    type: 'fate',
+    title: '武士の岐路',
+    body: '武士として歩んできた道の先に、二つの岐路がある——主君・直家に仕えて国を守るか、己の刀一本で自由に生きるか。',
+    trigger: { minTurn: 16, flags: ['flag_bg_samurai', 'flag_sword_vow'], probability: 0.9 },
+    choices: [
+      {
+        label: '主君への忠義を貫く',
+        successOutcome: {
+          text: '心が決まった。この刀は直家のために振るう。それが武士の本懐だ。',
+          statChanges: { fame: 5 },
+          relationChanges: { lord: 8 },
+          flagsSet: ['flag_samurai_serve_lord'],
+        },
+      },
+      {
+        label: '己の剣道を極める独立の道',
+        successOutcome: {
+          text: '誰にも縛られず、ただ剣と向き合う——それが本当の自分の道だと気づいた。',
+          statChanges: { martial: 2, fame: 3 },
+          relationChanges: { rival: 5 },
+          flagsSet: ['flag_samurai_independent'],
+        },
+      },
+    ],
+  },
+
+  // ═══════════════════════════════════════════════════════
+  // Category J: Merchant Path Events (5)
+  // ═══════════════════════════════════════════════════════
+
+  {
+    id: 'event_merchant_origin',
+    type: 'personal',
+    title: '没落の記憶',
+    body: '夜、目を閉じると父の算盤、母の涙、燃える蔵の匂いが蘇る。「一からやり直す」——そう誓ったあの日が、今も胸に焼きついている。',
+    trigger: { turn: 1, flags: ['flag_bg_merchant'] },
+    choices: [
+      {
+        label: '過去を力に変える（商売の復讐）',
+        successOutcome: {
+          text: '怒りと悲しみを商才に変えた。どんな逆境でも諦めない心が宿った。',
+          statChanges: { commerce: 1, gold: 10 },
+          flagsSet: ['flag_path_revenge_commerce'],
+        },
+      },
+      {
+        label: '新しい自分を作る（誇りある再出発）',
+        successOutcome: {
+          text: '過去は過去だ。今日から新しい物語を書く——そう心に刻んだ。',
+          statChanges: { charm: 1, omen: 5 },
+          flagsSet: ['flag_path_new_self'],
+        },
+      },
+    ],
+  },
+
+  {
+    id: 'event_debt_collector',
+    type: 'personal',
+    title: '取立人の影',
+    body: '家の古い債権者が現れた。「親父の借金、利子込みで80貫残っているぞ」。冷たい目で金を要求している。',
+    trigger: { minTurn: 2, flags: ['flag_bg_merchant'], probability: 0.85 },
+    choices: [
+      {
+        label: '今すぐ全額払う（50貫）',
+        successOutcome: {
+          text: '毅然と払った。商人として筋を通した。彌兵衛もその噂を聞いた。',
+          statChanges: { gold: -50 },
+          relationChanges: { merchant: 4 },
+          flagsSet: ['flag_debt_paid_early'],
+        },
+      },
+      {
+        label: '交渉して先延ばしにする',
+        check: 'charm',
+        threshold: 8,
+        successOutcome: {
+          text: '話術で返済を分割させることに成功した。商人としての弁舌が光った。',
+          relationChanges: { merchant: 3 },
+          flagsSet: ['flag_debt_negotiated'],
+        },
+        failOutcome: {
+          text: '交渉は失敗。取立人は怒り、噂が広まった。',
+          statChanges: { fame: -2, gold: -20 },
+        },
+      },
+    ],
+  },
+
+  {
+    id: 'event_trade_rival',
+    type: 'world',
+    title: '新参商人の台頭',
+    body: '「黒田屋」という新参商人が城下市場で客を奪い始めた。彌兵衛も苦い顔をしている。「どう出るつもりだ？」',
+    trigger: { minTurn: 8, flags: ['flag_bg_merchant', 'flag_merchant_trusted'], probability: 0.7 },
+    choices: [
+      {
+        label: '正面から価格と品質で競争する',
+        check: 'commerce',
+        threshold: 10,
+        successOutcome: {
+          text: '品質と速さで黒田屋を押しのけた。城下での評判が上がった。',
+          statChanges: { commerce: 2, gold: 50 },
+          relationChanges: { merchant: 4 },
+          flagsSet: ['flag_commerce_won'],
+        },
+        failOutcome: {
+          text: '黒田屋の資金力に太刀打ちできず、一時的に客を失った。',
+          statChanges: { gold: -20 },
+          relationChanges: { merchant: -2 },
+        },
+      },
+      {
+        label: '黒田屋と手を組む（同業提携）',
+        check: 'charm',
+        threshold: 9,
+        successOutcome: {
+          text: '競争より協力を選んだ。黒田屋は信頼できるパートナーになった。',
+          statChanges: { gold: 30, commerce: 1 },
+          flagsSet: ['flag_merchant_ally'],
+        },
+        failOutcome: {
+          text: '提携交渉が失敗した。商人同士の信頼は薄い。',
+          statChanges: { fame: -2 },
+        },
+      },
+    ],
+  },
+
+  {
+    id: 'event_port_opportunity',
+    type: 'career',
+    title: '港の好機',
+    body: '浜田宗右衛門が耳打ちした。「異国からの香辛料が入ってくる。今のうちに先物で仕込めば倍になる——ただし20貫の元手が要る」。',
+    trigger: { locationId: 'loc_port', flags: ['flag_bg_merchant'], probability: 0.75 },
+    choices: [
+      {
+        label: '投資する（20貫を賭ける）',
+        check: 'commerce',
+        threshold: 10,
+        successOutcome: {
+          text: '相場が読み通り動いた。80貫の利益が手に入った。',
+          statChanges: { gold: 80 },
+          relationChanges: { sea_merchant: 5 },
+          flagsSet: ['flag_port_invested'],
+        },
+        failOutcome: {
+          text: '相場が読み外れ、追加で20貫を失った。',
+          statChanges: { gold: -20 },
+          relationChanges: { sea_merchant: -2 },
+        },
+      },
+      {
+        label: '見送って様子を見る',
+        successOutcome: {
+          text: '慎重な一手だ。焦りは禁物——賢明だと宗右衛門も認めた。',
+          statChanges: { wisdom: 1 },
+        },
+      },
+    ],
+  },
+
+  {
+    id: 'event_merchant_path_choice',
+    type: 'fate',
+    title: '商人の岐路',
+    body: '商売人として立ってきた。今、選択の時が来た——港を拠点に海外交易へ乗り出すか、城下の商圏を固めて盤石の地盤を築くか。',
+    trigger: { minTurn: 16, flags: ['flag_bg_merchant', 'flag_debt_cleared'], probability: 0.9 },
+    choices: [
+      {
+        label: '海外交易に乗り出す（高リスク高リターン）',
+        successOutcome: {
+          text: '霧岬港から異国へ——商人としての最大の賭けに出た。',
+          statChanges: { commerce: 2, fame: 3 },
+          relationChanges: { sea_merchant: 5 },
+          flagsSet: ['flag_sea_trade_route'],
+        },
+      },
+      {
+        label: '城下商圏を固める（安定路線）',
+        successOutcome: {
+          text: '焦らず、城下に根を張ることを選んだ。信頼と財が積み重なった。',
+          statChanges: { gold: 100 },
+          relationChanges: { merchant: 5 },
+          flagsSet: ['flag_merchant_stronghold'],
         },
       },
     ],
